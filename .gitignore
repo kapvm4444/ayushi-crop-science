@@ -40,3 +40,6 @@ coverage
 
 # Vite
 .vite/
+
+# Agent file
+.agent
