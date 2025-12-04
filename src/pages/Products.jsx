@@ -50,6 +50,15 @@ export default function Products() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
+                    className="text-center mb-12"
+                >
+                    <h2 className="section-title">Explore Our Range</h2>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
                     className="flex flex-wrap justify-center gap-3 mb-16"
                 >
                     {categories.map((cat) => (
@@ -65,7 +74,7 @@ export default function Products() {
                 </motion.div>
 
                 {/* Product Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div className="flex flex-wrap justify-center gap-8">
                     {filteredProducts.map((product) => (
                         <motion.div
                             key={product.id}
@@ -73,7 +82,7 @@ export default function Products() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="group bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+                            className="group bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] xl:w-[calc(25%-2rem)] min-w-[280px]"
                         >
                             <div className="aspect-[4/3] overflow-hidden bg-muted relative">
                                 <img

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Leaf } from "lucide-react";
+import { Menu, X, Leaf, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -12,10 +12,13 @@ export default function FloatingNavbar({
     icon: <Leaf className="h-6 w-6 text-primary" />,
   },
   ctaText = "Get Quote",
+  ctaLink,
   onCtaClick = () => { },
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [mobileExpandedIndex, setMobileExpandedIndex] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -26,24 +29,23 @@ export default function FloatingNavbar({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isHomePage = location.pathname === "/";
-
   return (
     <>
       <motion.header
+        layout
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
         className={cn(
           "fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 transition-all duration-500 ease-in-out",
-          isScrolled || !isHomePage ? "pt-4" : "pt-6",
+          isScrolled /*|| !isHomePage*/ ? "pt-4" : "pt-6",
         )}
       >
         <div
           className={cn(
             "flex items-center justify-between px-6 py-3 transition-all duration-500 ease-in-out",
             "backdrop-blur-md border shadow-xl rounded-full",
-            isScrolled || !isHomePage
+            isScrolled /*|| !isHomePage*/
               ? "w-[85%] md:w-[70%] translate-y-2 bg-white/5 dark:bg-black/5 border-green-500/60"
               : "w-[95%] md:w-[90%] bg-transparent border-white/40 shadow-none",
           )}
@@ -64,7 +66,7 @@ export default function FloatingNavbar({
             <span
               className={cn(
                 "text-lg font-bold bg-clip-text text-transparent hidden sm:block transition-all",
-                isScrolled || !isHomePage
+                isScrolled /*|| !isHomePage*/
                   ? "bg-gradient-to-r from-primary to-green-700"
                   : "bg-gradient-to-r from-white to-white/80",
               )}
@@ -77,40 +79,96 @@ export default function FloatingNavbar({
           <nav className="hidden md:flex items-center gap-8">
             {navLinks
               .filter((link) => link.active)
-              .map((link) => (
-                <Link
+              .map((link, index) => (
+                <div
                   key={link.name}
-                  to={link.href}
-                  className={cn(
-                    "relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full group",
-                    location.pathname === link.href
-                      ? "bg-primary text-white shadow-md"
-                      : isScrolled || !isHomePage
-                        ? "text-primary hover:bg-primary hover:text-white"
-                        : "text-white hover:bg-white/20",
-                  )}
+                  className="relative group"
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
                 >
-                  {link.name}
-                </Link>
+                  <Link
+                    to={link.href}
+                    className={cn(
+                      "relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full flex items-center gap-1",
+                      location.pathname === link.href
+                        ? "bg-primary text-white shadow-md"
+                        : isScrolled /*|| !isHomePage*/
+                          ? "text-primary hover:bg-primary hover:text-white"
+                          : "text-white hover:bg-white/20",
+                    )}
+                  >
+                    {link.name}
+                    {link.dropdown && (
+                      <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
+                    )}
+                  </Link>
+
+                  {/* Dropdown Menu */}
+                  <AnimatePresence>
+                    {link.dropdown && hoveredIndex === index && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full left-1/2 -translate-x-1/2 pt-4 w-56 z-50"
+                      >
+                        <div
+                          className={cn(
+                            "backdrop-blur-2xl rounded-xl shadow-2xl overflow-hidden p-2 border transition-all duration-300",
+                            isScrolled /*|| !isHomePage*/
+                              ? "bg-white/70 dark:bg-black/70 border-green-500/50"
+                              : "bg-black/40 border-white/20",
+                          )}
+                        >
+                          {link.dropdown.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              to={subItem.href}
+                              className={cn(
+                                "block px-4 py-3 text-sm rounded-lg transition-colors font-medium",
+                                isScrolled /*|| !isHomePage*/
+                                  ? "text-neutral-700 dark:text-neutral-200 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-600"
+                                  : "text-white/90 hover:bg-white/10 hover:text-white",
+                              )}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               ))}
           </nav>
 
           {/* CTA & Mobile Toggle */}
           <div className="flex items-center gap-4">
-            <Button
-              size="sm"
-              className="rounded-full px-6 hidden md:flex"
-              onClick={onCtaClick}
-            >
-              {ctaText}
-            </Button>
+            {ctaLink ? (
+              <Link to={ctaLink}>
+                <Button size="sm" className="rounded-full px-6 hidden md:flex">
+                  {ctaText}
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                size="sm"
+                className="rounded-full px-6 hidden md:flex"
+                onClick={onCtaClick}
+              >
+                {ctaText}
+              </Button>
+            )}
 
             <Button
               variant="ghost"
               size="icon"
               className={cn(
                 "md:hidden",
-                isScrolled || !isHomePage ? "text-foreground" : "text-white",
+                isScrolled /*|| !isHomePage*/
+                  ? "text-foreground"
+                  : "text-white",
               )}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
@@ -127,25 +185,70 @@ export default function FloatingNavbar({
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-sm pt-28 px-6 md:hidden"
+            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-sm pt-28 px-6 md:hidden overflow-y-auto"
           >
-            <nav className="flex flex-col gap-6 text-center">
+            <nav className="flex flex-col gap-6 text-center pb-10">
               {navLinks
                 .filter((link) => link.active)
-                .map((link) => (
-                  <Link
-                    key={link.name}
-                    to={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      "text-2xl font-medium transition-colors hover:text-primary",
-                      location.pathname === link.href
-                        ? "text-primary"
-                        : "text-muted-foreground",
-                    )}
-                  >
-                    {link.name}
-                  </Link>
+                .map((link, index) => (
+                  <div key={link.name} className="flex flex-col items-center">
+                    <div className="flex items-center gap-2">
+                      <Link
+                        to={link.href}
+                        onClick={() =>
+                          !link.dropdown && setIsMobileMenuOpen(false)
+                        }
+                        className={cn(
+                          "text-2xl font-medium transition-colors hover:text-primary",
+                          location.pathname === link.href
+                            ? "text-primary"
+                            : "text-muted-foreground",
+                        )}
+                      >
+                        {link.name}
+                      </Link>
+                      {link.dropdown && (
+                        <button
+                          onClick={() =>
+                            setMobileExpandedIndex(
+                              mobileExpandedIndex === index ? null : index,
+                            )
+                          }
+                          className="p-2"
+                        >
+                          <ChevronDown
+                            className={cn(
+                              "h-6 w-6 transition-transform",
+                              mobileExpandedIndex === index ? "rotate-180" : "",
+                            )}
+                          />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Mobile Dropdown */}
+                    <AnimatePresence>
+                      {link.dropdown && mobileExpandedIndex === index && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden flex flex-col gap-4 mt-4 w-full bg-secondary/20 rounded-xl"
+                        >
+                          {link.dropdown.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              to={subItem.href}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                              className="py-3 text-lg text-muted-foreground hover:text-primary transition-colors"
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 ))}
               <Button
                 size="lg"

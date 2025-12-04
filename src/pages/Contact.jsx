@@ -58,8 +58,8 @@ export default function Contact() {
                         viewport={{ once: true }}
                         className="space-y-10"
                     >
-                        <div>
-                            <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">Contact Information</h2>
+                        <div className="text-center md:text-left">
+                            <h2 className="section-title mb-6">Contact Information</h2>
                             <p className="text-muted-foreground text-lg">
                                 We are here to help you with any questions or concerns. Feel free to reach out to us through any of the following channels.
                             </p>
@@ -105,7 +105,7 @@ export default function Contact() {
                         viewport={{ once: true }}
                         className="bg-card border rounded-2xl p-8 shadow-xl sticky top-32"
                     >
-                        <h2 className="text-3xl md:text-4xl font-bold mb-6 font-serif">Send us a Message</h2>
+                        <h2 className="section-title mb-6 text-center">Send us a Message</h2>
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
@@ -177,7 +177,7 @@ export default function Contact() {
                     transition={{ duration: 0.5 }}
                     className="mt-24 max-w-3xl mx-auto"
                 >
-                    <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 font-serif">Frequently Asked Questions</h2>
+                    <h2 className="section-title">Frequently Asked Questions</h2>
                     <div className="space-y-6">
                         {faqs.map((faq, i) => (
                             <div key={i} className="bg-card border rounded-xl p-6 shadow-sm">

@@ -47,6 +47,8 @@ export default {
                 sm: "calc(--radius) - 4px)",
             },
             fontFamily: {
+                sans: ['"Outfit"', 'sans-serif'],
+                heading: ['"Space Grotesk"', 'sans-serif'],
                 serif: ['"Playfair Display"', 'Georgia', 'serif'],
             },
             keyframes: {

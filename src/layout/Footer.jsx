@@ -8,6 +8,7 @@ import {
   Mail,
   Phone,
   MapPin,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TextHoverEffect from "@/components/premium/TextHoverEffect";
@@ -21,22 +22,34 @@ const SOCIAL_LINKS_DATA = [
 
 const QUICK_LINKS_DATA = [
   { name: "Home", href: "/" },
-  { name: "About Us", href: "/about" },
-  { name: "Products", href: "/products" },
-  { name: "Contact", href: "/contact" },
+  { name: "Who We Are", href: "/about/who-we-are" },
+  { name: "Vision & Mission", href: "/about/vision-mission" },
+  { name: "Our USP", href: "/about/usp" },
+  { name: "Infrastructure", href: "/about/infrastructure" },
+  { name: "Careers", href: "/careers" },
+  { name: "Contact Us", href: "/contact" },
+];
+
+const PRODUCT_LINKS_DATA = [
+  { name: "Insecticides", href: "/products/insecticides" },
+  { name: "Herbicides", href: "/products/herbicides" },
+  { name: "Fungicides", href: "/products/fungicides" },
+  { name: "Plant Growth Regulators", href: "/products/pgr" },
+  { name: "Bio-Fertilizers", href: "/products/bio-fertilizers" },
+  { name: "Organic Products", href: "/products/organic" },
 ];
 
 const CONTACT_INFO_DATA = [
   {
-    icon: <MapPin className="h-5 w-5 text-primary shrink-0" />,
+    icon: <MapPin className="h-5 w-5 text-green-400 shrink-0" />,
     text: "123 Agriculture Lane, Green Valley, India",
   },
   {
-    icon: <Phone className="h-5 w-5 text-primary shrink-0" />,
+    icon: <Phone className="h-5 w-5 text-green-400 shrink-0" />,
     text: "+91 98765 43210",
   },
   {
-    icon: <Mail className="h-5 w-5 text-primary shrink-0" />,
+    icon: <Mail className="h-5 w-5 text-green-400 shrink-0" />,
     text: "info@ayushicrop.com",
   },
 ];
@@ -46,27 +59,31 @@ export default function Footer({
   brandDesc = "Empowering farmers with advanced crop protection solutions. We are dedicated to sustainable agriculture and higher yields.",
   socialLinks = SOCIAL_LINKS_DATA,
   quickLinks = QUICK_LINKS_DATA,
+  productLinks = PRODUCT_LINKS_DATA,
   contactInfo = CONTACT_INFO_DATA,
 }) {
   const [socials] = useState(socialLinks);
   const [links] = useState(quickLinks);
+  const [products] = useState(productLinks);
   const [contacts] = useState(contactInfo);
 
   return (
-    <footer className="bg-secondary/30 border-t pt-16 pb-8 overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12 relative z-10">
+    <footer className="bg-[#052e16] text-white border-t border-green-900 pt-20 pb-0 overflow-hidden relative font-sans">
+      <div className="container mx-auto px-4 relative z-10 mb-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Info */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
               <img
-                src="/logo.png"
+                src="/footer-widget-logo@2x.png"
                 alt={brandName}
-                className="h-20 w-auto object-contain"
+                className="h-16 w-auto object-contain"
               />
-              <span className="text-xl font-bold">{brandName}</span>
+              <span className="text-2xl font-bold font-heading tracking-wide text-white">
+                {brandName}
+              </span>
             </div>
-            <p className="text-muted-foreground text-sm leading-relaxed">
+            <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
               {brandDesc}
             </p>
             <div className="flex gap-4">
@@ -74,7 +91,7 @@ export default function Footer({
                 <a
                   key={i}
                   href={social.href}
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="h-10 w-10 rounded-full bg-green-900/50 flex items-center justify-center text-green-400 hover:bg-green-600 hover:text-white transition-all duration-300"
                 >
                   {social.icon}
                 </a>
@@ -84,14 +101,17 @@ export default function Footer({
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-bold mb-6 text-green-400 font-heading">
+              Quick Links
+            </h3>
+            <ul className="space-y-3">
               {links.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
                   >
+                    <ChevronRight className="h-4 w-4 text-green-600 group-hover:text-green-400 transition-colors" />
                     {link.name}
                   </Link>
                 </li>
@@ -99,48 +119,81 @@ export default function Footer({
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Product Links */}
           <div>
-            <h3 className="font-semibold mb-4">Contact Us</h3>
-            <ul className="space-y-4">
-              {contacts.map((info, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-3 text-sm text-muted-foreground"
-                >
-                  {info.icon}
-                  <span>{info.text}</span>
+            <h3 className="text-lg font-bold mb-6 text-green-400 font-heading">
+              Our Products
+            </h3>
+            <ul className="space-y-3">
+              {products.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
+                  >
+                    <ChevronRight className="h-4 w-4 text-green-600 group-hover:text-green-400 transition-colors" />
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Newsletter */}
-          <div>
-            <h3 className="font-semibold mb-4">Newsletter</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Subscribe to get updates on new products and farming tips.
-            </p>
-            <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              />
-              <Button size="sm">Subscribe</Button>
+          {/* Contact & Newsletter */}
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-lg font-bold mb-6 text-green-400 font-heading">
+                Contact Us
+              </h3>
+              <ul className="space-y-4">
+                {contacts.map((info, i) => (
+                  <li key={i} className="flex items-start gap-4 text-gray-400">
+                    <div className="mt-1 p-2 rounded-lg bg-green-900/30 text-green-400">
+                      {info.icon}
+                    </div>
+                    <span className="text-sm leading-relaxed">{info.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold mb-4 text-green-400 font-heading">
+                Newsletter
+              </h3>
+              <div className="space-y-3">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="flex h-12 w-full rounded-lg border border-green-800 bg-green-950/50 px-4 py-2 text-sm placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:border-transparent transition-all"
+                />
+                <Button className="w-full h-12 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium shadow-md hover:shadow-lg transition-all">
+                  Subscribe Now
+                </Button>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Text Hover Effect Background */}
-        <div className="w-full h-[15rem] md:h-[20rem] flex items-center justify-center relative opacity-20 mt-10">
-          <TextHoverEffect text="ACS" />
+        {/* Text Hover Effect - Desktop Only */}
+        <div className="hidden md:flex w-full items-center justify-center py-8">
+          <div className="w-full h-26">
+            <TextHoverEffect text="AYUSHI CROP SCIENCE" duration={0} />
+          </div>
         </div>
 
-        <div className="border-t pt-8 text-center text-sm text-muted-foreground relative z-10">
+        <div className="border-t border-green-900 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
           <p>
             &copy; {new Date().getFullYear()} {brandName}. All rights reserved.
           </p>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-green-400 transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#" className="hover:text-green-400 transition-colors">
+              Terms of Service
+            </a>
+          </div>
         </div>
       </div>
     </footer>
