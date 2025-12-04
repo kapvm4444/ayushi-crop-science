@@ -30,7 +30,7 @@ export default function TextHoverEffect({ text, duration = 0, className }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
-      className={cn("select-none", className)}
+      className={cn("select-none z-50", className)}
     >
       <defs>
         <linearGradient
