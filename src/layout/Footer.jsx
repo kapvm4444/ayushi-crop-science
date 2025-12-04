@@ -177,7 +177,7 @@ export default function Footer({
 
         {/* Text Hover Effect - Desktop Only */}
         <div className="hidden md:flex w-full items-center justify-center py-8">
-          <div className="w-full h-26">
+          <div className="w-full h-26 z-10">
             <TextHoverEffect text="AYUSHI CROP SCIENCE" duration={0} />
           </div>
         </div>

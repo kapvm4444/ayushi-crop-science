@@ -47,9 +47,9 @@ export const routesConfig = [
         name: "News & Updates",
         showInNav: true,
         dropdown: [
-            { name: "News", href: "/news" },
-            { name: "Events/Media", href: "/news" }, // Reusing News page for now
-            { name: "Blogs", href: "/news" }, // Reusing News page for now
+            { name: "News", href: "/news/company-news" },
+            { name: "Events/Media", href: "/news/events-media" },
+            { name: "Blogs", href: "/news/blogs" },
         ]
     },
     {
@@ -66,7 +66,10 @@ export const routesConfig = [
     { path: "/products/:category", name: "Product Category", showInNav: false },
     { path: "/products/:id", name: "Product Details", showInNav: false },
     { path: "/careers/apply/:id", name: "Job Apply", showInNav: false },
-    { path: "/news/:id", name: "News Details", showInNav: false },
+    { path: "/news/:category/:id", name: "Post Details", showInNav: false },
+    { path: "/news/company-news", name: "Company News", showInNav: false },
+    { path: "/news/events-media", name: "Events & Media", showInNav: false },
+    { path: "/news/blogs", name: "Blogs", showInNav: false },
     { path: "/about/who-we-are", name: "Who We Are", showInNav: false },
     { path: "/about/vision-mission", name: "Vision & Mission", showInNav: false },
     { path: "/about/usp", name: "Our USP", showInNav: false },

@@ -7,19 +7,20 @@ import { cn } from "@/lib/utils";
 
 export default function FloatingNavbar({
   navLinks = [],
-  logo = {
-    text: "Ayushi Crop Science",
-    icon: <Leaf className="h-6 w-6 text-primary" />,
-  },
   ctaText = "Get Quote",
   ctaLink,
-  onCtaClick = () => { },
+  onCtaClick = () => {},
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [mobileExpandedIndex, setMobileExpandedIndex] = useState(null);
   const location = useLocation();
+
+  const logo = {
+    text: "Ayushi Crop Science",
+    src: isScrolled ? "/logo@2x.png" : "/footer-widget-logo@2x.png",
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,15 +54,11 @@ export default function FloatingNavbar({
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="transition-colors">
-              {logo.src ? (
-                <img
-                  src={logo.src}
-                  alt={logo.text}
-                  className="h-14 w-auto object-contain"
-                />
-              ) : (
-                logo.icon
-              )}
+              <img
+                src={logo.src}
+                alt={logo.text}
+                className="h-14 w-auto object-contain"
+              />
             </div>
             <span
               className={cn(
@@ -86,22 +83,33 @@ export default function FloatingNavbar({
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
-                  <Link
-                    to={link.href}
-                    className={cn(
-                      "relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full flex items-center gap-1",
-                      location.pathname === link.href
-                        ? "bg-primary text-white shadow-md"
-                        : isScrolled /*|| !isHomePage*/
+                  {link.dropdown ? (
+                    <div
+                      className={cn(
+                        "relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full flex items-center gap-1 cursor-default",
+                        isScrolled
                           ? "text-primary hover:bg-primary hover:text-white"
                           : "text-white hover:bg-white/20",
-                    )}
-                  >
-                    {link.name}
-                    {link.dropdown && (
+                      )}
+                    >
+                      {link.name}
                       <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
-                    )}
-                  </Link>
+                    </div>
+                  ) : (
+                    <Link
+                      to={link.href}
+                      className={cn(
+                        "relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full flex items-center gap-1",
+                        location.pathname === link.href
+                          ? "bg-primary text-white shadow-md"
+                          : isScrolled
+                            ? "text-primary hover:bg-primary hover:text-white"
+                            : "text-white hover:bg-white/20",
+                      )}
+                    >
+                      {link.name}
+                    </Link>
+                  )}
 
                   {/* Dropdown Menu */}
                   <AnimatePresence>
@@ -111,7 +119,7 @@ export default function FloatingNavbar({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute top-full left-1/2 -translate-x-1/2 pt-4 w-56 z-50"
+                        className="absolute top-full left-1/3 -translate-x-1/3 pt-4 w-56"
                       >
                         <div
                           className={cn(
@@ -193,20 +201,36 @@ export default function FloatingNavbar({
                 .map((link, index) => (
                   <div key={link.name} className="flex flex-col items-center">
                     <div className="flex items-center gap-2">
-                      <Link
-                        to={link.href}
-                        onClick={() =>
-                          !link.dropdown && setIsMobileMenuOpen(false)
-                        }
-                        className={cn(
-                          "text-2xl font-medium transition-colors hover:text-primary",
-                          location.pathname === link.href
-                            ? "text-primary"
-                            : "text-muted-foreground",
-                        )}
-                      >
-                        {link.name}
-                      </Link>
+                      {link.dropdown ? (
+                        <div
+                          onClick={() =>
+                            setMobileExpandedIndex(
+                              mobileExpandedIndex === index ? null : index,
+                            )
+                          }
+                          className={cn(
+                            "text-2xl font-medium transition-colors hover:text-primary cursor-pointer",
+                            mobileExpandedIndex === index
+                              ? "text-primary"
+                              : "text-muted-foreground",
+                          )}
+                        >
+                          {link.name}
+                        </div>
+                      ) : (
+                        <Link
+                          to={link.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={cn(
+                            "text-2xl font-medium transition-colors hover:text-primary",
+                            location.pathname === link.href
+                              ? "text-primary"
+                              : "text-muted-foreground",
+                          )}
+                        >
+                          {link.name}
+                        </Link>
+                      )}
                       {link.dropdown && (
                         <button
                           onClick={() =>

@@ -7,7 +7,6 @@ export default function Layout({ children }) {
     <div className="flex min-h-screen flex-col">
       <FloatingNavbar
         navLinks={navLinks}
-        logo={{ text: "Ayushi Crop Science", src: "/logo.png" }}
         ctaText="Become a Dealer"
         ctaLink="/become-dealer"
       />

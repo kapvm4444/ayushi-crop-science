@@ -1,8 +1,10 @@
+import { useState } from "react"
 import Layout from "@/layout/Layout"
 import AuroraHero from "@/components/premium/AuroraHero"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
+import { X } from "lucide-react"
 
-const IMAGES = [
+const IMAGES_DATA = [
     "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2070&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=2070&auto=format&fit=crop",
@@ -12,6 +14,9 @@ const IMAGES = [
 ]
 
 export default function Gallery() {
+    const [images] = useState(IMAGES_DATA)
+    const [selectedImage, setSelectedImage] = useState(null)
+
     return (
         <Layout>
             <AuroraHero
@@ -24,14 +29,15 @@ export default function Gallery() {
                     <h2 className="section-title">Visual Journey</h2>
                 </div>
                 <div className="flex flex-wrap justify-center gap-6">
-                    {IMAGES.map((src, i) => (
+                    {images.map((src, i) => (
                         <motion.div
                             key={i}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 }}
-                            className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px]"
+                            className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px] cursor-pointer"
+                            onClick={() => setSelectedImage(src)}
                         >
                             <img
                                 src={src}
@@ -42,6 +48,38 @@ export default function Gallery() {
                     ))}
                 </div>
             </div>
+
+            <AnimatePresence>
+                {selectedImage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="relative max-w-5xl w-full max-h-[90vh] rounded-xl overflow-hidden"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                onClick={() => setSelectedImage(null)}
+                                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+                            >
+                                <X className="h-6 w-6" />
+                            </button>
+                            <img
+                                src={selectedImage}
+                                alt="Gallery Preview"
+                                className="w-full h-full object-contain max-h-[90vh]"
+                            />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </Layout>
     )
 }

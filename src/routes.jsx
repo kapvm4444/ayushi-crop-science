@@ -10,10 +10,15 @@ const Contact = lazy(() => import("./pages/Contact"))
 const Gallery = lazy(() => import("./pages/Gallery"))
 const Careers = lazy(() => import("./pages/Careers"))
 const JobApply = lazy(() => import("./pages/JobApply"))
-const News = lazy(() => import("./pages/News"))
-const NewsDetails = lazy(() => import("./pages/NewsDetails"))
 const BecomeDealer = lazy(() => import("./pages/BecomeDealer"))
 const ProductCategory = lazy(() => import("./pages/ProductCategory"))
+
+const PostDetail = lazy(() => import("./pages/news/PostDetail"))
+
+// News Sub-pages
+const CompanyNews = lazy(() => import("./pages/news/CompanyNews"))
+const EventsMedia = lazy(() => import("./pages/news/EventsMedia"))
+const Blogs = lazy(() => import("./pages/news/Blogs"))
 
 // About Sub-pages
 const WhoWeAre = lazy(() => import("./pages/about/WhoWeAre"))
@@ -36,9 +41,13 @@ const componentMap = {
     "Gallery": Gallery,
     "Careers": Careers,
     "Job Apply": JobApply,
-    "News & Updates": News,
-    "News Details": NewsDetails,
+    "Post Details": PostDetail,
     "Become a Dealer": BecomeDealer,
+
+    // News Sub-pages
+    "Company News": CompanyNews,
+    "Events & Media": EventsMedia,
+    "Blogs": Blogs,
 
     // Sub-pages
     "Who We Are": WhoWeAre,
