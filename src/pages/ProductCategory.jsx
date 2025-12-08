@@ -47,9 +47,7 @@ export default function ProductCategory() {
         <Layout>
             <AuroraHero
                 title={title}
-                subtitle={`Explore our range of high-quality ${title.toLowerCase()} designed for maximum yield.`}
-                ctaText="View All Products"
-                ctaLink="/products"
+                compact={true}
                 backgroundImage="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop"
             />
 
@@ -61,7 +59,7 @@ export default function ProductCategory() {
                                 key={product.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
+                                viewport={{ once: true, amount: 0.2 }}
                                 transition={{ duration: 0.5, delay: i * 0.1 }}
                                 className="group bg-card border rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px]"
                             >

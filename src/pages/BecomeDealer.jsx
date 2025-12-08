@@ -7,35 +7,101 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { CheckCircle, MapPin, Phone, Mail } from "lucide-react";
+import { useSubmitDealer } from "@/hooks/useSubmitDealer.js";
+import {
+    useStates,
+    useStateAreas,
+    useDistricts,
+    useTalukas,
+    useVillages
+} from "@/hooks/useLocations.js";
+import { useProducts } from "@/hooks/useProducts.js";
 
 export default function BecomeDealer() {
+    const submitDealerMutation = useSubmitDealer();
     const [formData, setFormData] = useState({
         name: "",
-        companyName: "",
+        firmname: "",
         email: "",
-        phone: "",
-        address: "",
-        message: "",
+        mobileno: "",
+        pincode: "",
+        pesticide_lic_no: "",
+        state_id: "",
+        statearea_id: "",
+        district_id: "",
+        taluka_id: "",
+        village_id: "",
+        product_id: "",
+        interested_product: "",
+        address: ""
     });
 
+    // Fetch Location Data with Cascading Dependencies
+    const { data: states } = useStates();
+    const { data: stateAreas } = useStateAreas(formData.state_id);
+    const { data: districts } = useDistricts(formData.statearea_id);
+    const { data: talukas } = useTalukas(formData.district_id);
+    const { data: villages } = useVillages(formData.taluka_id);
+    const { data: products } = useProducts();
+
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((prev) => {
+            const updates = { [name]: value };
+
+            // Cascading Resets
+            if (name === "state_id") {
+                updates.statearea_id = "";
+                updates.district_id = "";
+                updates.taluka_id = "";
+                updates.village_id = "";
+            } else if (name === "statearea_id") {
+                updates.district_id = "";
+                updates.taluka_id = "";
+                updates.village_id = "";
+            } else if (name === "district_id") {
+                updates.taluka_id = "";
+                updates.village_id = "";
+            } else if (name === "taluka_id") {
+                updates.village_id = "";
+            }
+
+            return { ...prev, ...updates };
+        });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Dealer Application Submitted:", formData);
-        // Add API call logic here
-        alert("Thank you for your interest! We will contact you soon.");
+
+        submitDealerMutation.mutate(formData, {
+            onSuccess: () => {
+                setFormData({
+                    name: "",
+                    firmname: "",
+                    email: "",
+                    mobileno: "",
+                    pincode: "",
+                    pesticide_lic_no: "",
+                    state_id: "",
+                    statearea_id: "",
+                    district_id: "",
+                    taluka_id: "",
+                    village_id: "",
+                    product_id: "",
+                    interested_product: "",
+                    address: ""
+                });
+            }
+        });
     };
+
+    const inputClass = "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
 
     return (
         <Layout>
             <AuroraHero
                 title="Become a Dealer"
-                subtitle="Join our network of successful partners and help us revolutionize agriculture across the nation."
-                ctaText="Apply Now"
-                ctaLink="#apply-form"
+                compact={true}
                 backgroundImage="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=2071&auto=format&fit=crop"
             />
 
@@ -45,7 +111,7 @@ export default function BecomeDealer() {
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
+                        viewport={{ once: true, amount: 0.2 }}
                         transition={{ duration: 0.5 }}
                         className="text-center md:text-left"
                     >
@@ -95,12 +161,13 @@ export default function BecomeDealer() {
                         id="apply-form"
                         initial={{ opacity: 0, x: 50 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
+                        viewport={{ once: true, amount: 0.2 }}
                         transition={{ duration: 0.5 }}
                         className="bg-card border rounded-3xl p-8 shadow-lg"
                     >
                         <h2 className="text-2xl font-bold mb-6 text-center">Dealer Application</h2>
                         <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Personal & Business Info */}
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="name">Full Name</Label>
@@ -114,12 +181,12 @@ export default function BecomeDealer() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="companyName">Company Name</Label>
+                                    <Label htmlFor="firmname">Firm/Company Name</Label>
                                     <Input
-                                        id="companyName"
-                                        name="companyName"
+                                        id="firmname"
+                                        name="firmname"
                                         placeholder="Agro Traders"
-                                        value={formData.companyName}
+                                        value={formData.firmname}
                                         onChange={handleChange}
                                         required
                                     />
@@ -140,24 +207,139 @@ export default function BecomeDealer() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="phone">Phone Number</Label>
+                                    <Label htmlFor="mobileno">Mobile Number</Label>
                                     <Input
-                                        id="phone"
-                                        name="phone"
+                                        id="mobileno"
+                                        name="mobileno"
                                         placeholder="+91 98765 43210"
-                                        value={formData.phone}
+                                        value={formData.mobileno}
                                         onChange={handleChange}
                                         required
                                     />
                                 </div>
                             </div>
 
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="pesticide_lic_no">Pesticide Lic No</Label>
+                                    <Input
+                                        id="pesticide_lic_no"
+                                        name="pesticide_lic_no"
+                                        placeholder="License Number"
+                                        value={formData.pesticide_lic_no}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="pincode">Pincode</Label>
+                                    <Input
+                                        id="pincode"
+                                        name="pincode"
+                                        placeholder="360001"
+                                        value={formData.pincode}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Location Details Dropdowns */}
+                            <div className="space-y-4">
+                                <Label className="text-base font-semibold">Location Details</Label>
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <div className="space-y-1">
+                                        <Label htmlFor="state_id" className="text-xs text-muted-foreground">State</Label>
+                                        <select
+                                            id="state_id"
+                                            name="state_id"
+                                            className={inputClass}
+                                            value={formData.state_id}
+                                            onChange={handleChange}
+                                            required
+                                        >
+                                            <option value="">Select State</option>
+                                            {states?.map(item => (
+                                                <option key={item.id} value={item.id}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <Label htmlFor="statearea_id" className="text-xs text-muted-foreground">State Area</Label>
+                                        <select
+                                            id="statearea_id"
+                                            name="statearea_id"
+                                            className={inputClass}
+                                            value={formData.statearea_id}
+                                            onChange={handleChange}
+                                            required
+                                            disabled={!formData.state_id}
+                                        >
+                                            <option value="">Select Area</option>
+                                            {stateAreas?.map(item => (
+                                                <option key={item.id} value={item.id}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <Label htmlFor="district_id" className="text-xs text-muted-foreground">District</Label>
+                                        <select
+                                            id="district_id"
+                                            name="district_id"
+                                            className={inputClass}
+                                            value={formData.district_id}
+                                            onChange={handleChange}
+                                            required
+                                            disabled={!formData.statearea_id}
+                                        >
+                                            <option value="">Select District</option>
+                                            {districts?.map(item => (
+                                                <option key={item.id} value={item.id}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <Label htmlFor="taluka_id" className="text-xs text-muted-foreground">Taluka</Label>
+                                        <select
+                                            id="taluka_id"
+                                            name="taluka_id"
+                                            className={inputClass}
+                                            value={formData.taluka_id}
+                                            onChange={handleChange}
+                                            required
+                                            disabled={!formData.district_id}
+                                        >
+                                            <option value="">Select Taluka</option>
+                                            {talukas?.map(item => (
+                                                <option key={item.id} value={item.id}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <Label htmlFor="village_id" className="text-xs text-muted-foreground">Village</Label>
+                                        <select
+                                            id="village_id"
+                                            name="village_id"
+                                            className={inputClass}
+                                            value={formData.village_id}
+                                            onChange={handleChange}
+                                            required
+                                            disabled={!formData.taluka_id}
+                                        >
+                                            <option value="">Select Village</option>
+                                            {villages?.map(item => (
+                                                <option key={item.id} value={item.id}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="space-y-2">
-                                <Label htmlFor="address">Business Address</Label>
+                                <Label htmlFor="address">Full Address</Label>
                                 <Textarea
                                     id="address"
                                     name="address"
-                                    placeholder="Full address with pincode"
+                                    placeholder="Building, Street, Landmark..."
                                     value={formData.address}
                                     onChange={handleChange}
                                     required
@@ -165,19 +347,37 @@ export default function BecomeDealer() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="message">Why do you want to partner with us?</Label>
+                                <Label htmlFor="product_id">Interested Product</Label>
+                                <select
+                                    id="product_id"
+                                    name="product_id"
+                                    className={inputClass}
+                                    value={formData.product_id}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="">Select Product from List</option>
+                                    {products?.map(item => (
+                                        <option key={item.id} value={item.id}>{item.name} {item.brand ? `(${item.brand})` : ''}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="interested_product">Message / Specific Requirements</Label>
                                 <Textarea
-                                    id="message"
-                                    name="message"
-                                    placeholder="Tell us about your experience and business plan..."
-                                    value={formData.message}
+                                    id="interested_product"
+                                    name="interested_product"
+                                    placeholder="Any specific requirements or additional details..."
+                                    value={formData.interested_product}
                                     onChange={handleChange}
                                     rows={4}
+                                    required
                                 />
                             </div>
 
-                            <Button type="submit" size="lg" className="w-full">
-                                Submit Application
+                            <Button type="submit" size="lg" disabled={submitDealerMutation.isPending} className="w-full">
+                                {submitDealerMutation.isPending ? "Submitting..." : "Submit Application"}
                             </Button>
                         </form>
                     </motion.div>

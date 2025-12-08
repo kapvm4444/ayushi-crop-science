@@ -43,6 +43,7 @@ export default function ProductDetails() {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
                         className="relative aspect-square bg-secondary/20 rounded-3xl overflow-hidden border shadow-sm"
                     >
                         <img
@@ -56,7 +57,7 @@ export default function ProductDetails() {
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
                         className="space-y-8"
                     >
                         <div>

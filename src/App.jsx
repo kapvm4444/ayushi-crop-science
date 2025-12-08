@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
-import { Toaster } from "sonner";
+import { Toaster } from "react-hot-toast";
 import TopLoadingBar from "@/components/ui/loading-bar";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import routes from "./routes";
@@ -30,7 +30,16 @@ function App() {
           <div className="min-h-screen bg-background text-foreground font-sans antialiased overflow-x-hidden">
             <TopLoadingBar />
             <AppRoutes />
-            <Toaster />
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                style: {
+                  background: "#000",
+                  color: "#fff",
+                  border: "1px solid #333",
+                },
+              }}
+            />
           </div>
         </Router>
       </QueryClientProvider>

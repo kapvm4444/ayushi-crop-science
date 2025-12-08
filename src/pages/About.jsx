@@ -117,11 +117,7 @@ export default function About() {
     <Layout>
       <AuroraHero
         title="Our Roots, Our Legacy"
-        subtitle="Ayushi Crop Science is dedicated to revolutionizing agriculture through innovation, quality, and a deep commitment to the farming community."
-        ctaText="View Products"
-        ctaLink="/products"
-        secondaryCtaText="Contact Team"
-        secondaryCtaLink="/contact"
+        compact={true}
         backgroundImage="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?q=80&w=2070&auto=format&fit=crop"
       />
 

@@ -1,9 +1,9 @@
-import { getDataByEndPoint } from "@/services/getDataByEndPoint.js";
+import { getDataByEndpoint } from "@/services/getData.js";
 
 export async function getAbout() {
-  return await getDataByEndPoint("frontend/about");
+  return await getDataByEndpoint("frontend/about");
 }
 
 export async function getVisionMission() {
-  return await getDataByEndPoint("frontend/vision-mission");
+  return await getDataByEndpoint("frontend/vision-mission");
 }

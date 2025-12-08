@@ -10,7 +10,7 @@ export default function BentoGrid({ items = [] }) {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: i * 0.1 }}
-                    viewport={{ once: true }}
+                    viewport={{ once: true, amount: 0.2 }}
                     className={cn(
                         "group relative overflow-hidden rounded-xl border bg-background/50 p-6 hover:shadow-xl transition-all duration-300 backdrop-blur-sm",
                         item.className

@@ -9,9 +9,12 @@ export default function AuroraHero({
   secondaryCtaText,
   secondaryCtaLink,
   backgroundImage,
+  compact = false, // New prop for compact mode
 }) {
   return (
-    <div className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+    <div
+      className={`relative w-full flex items-center justify-center overflow-hidden ${compact ? 'h-[30vh] min-h-[250px]' : 'h-screen'}`}
+    >
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <img
@@ -44,17 +47,17 @@ export default function AuroraHero({
       <div className="absolute inset-0 bg-grid-white opacity-5" />
 
       {/* Content */}
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-16 md:mt-0">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight"
+          className={`${compact ? 'text-4xl md:text-5xl' : 'text-5xl md:text-7xl'} font-bold text-white mb-6 tracking-tight`}
         >
           {title}
         </motion.h1>
 
-        {subtitle && (
+        {subtitle && !compact && (
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -65,8 +68,21 @@ export default function AuroraHero({
           </motion.p>
         )}
 
-        {/* CTA Buttons */}
-        {(ctaText || secondaryCtaText) && (
+        {/* Subtitle for compact mode (optional, smaller) */}
+        {subtitle && compact && (
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-lg text-neutral-300 max-w-2xl mx-auto"
+          >
+            {subtitle}
+          </motion.p>
+        )}
+
+
+        {/* CTA Buttons - Hidden in compact mode usually, unless specific need? User said "just title". I'll hide them for compact. */}
+        {!compact && (ctaText || secondaryCtaText) && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -96,20 +112,22 @@ export default function AuroraHero({
         )}
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
-          <motion.div
-            className="w-1.5 h-1.5 bg-white rounded-full"
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-        </div>
-      </motion.div>
+      {/* Scroll Indicator - Hidden in compact mode */}
+      {!compact && (
+        <motion.div
+          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
+            <motion.div
+              className="w-1.5 h-1.5 bg-white rounded-full"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

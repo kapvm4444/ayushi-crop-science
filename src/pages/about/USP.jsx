@@ -60,7 +60,7 @@ export default function USP() {
                         key={i}
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+                        viewport={{ once: true, amount: 0.2 }}
                         transition={{ delay: i * 0.1 }}
                         className={`bg-card border p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 group ${item.className}`}
                     >

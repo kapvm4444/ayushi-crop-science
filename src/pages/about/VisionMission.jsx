@@ -1,8 +1,6 @@
 import AboutLayout from "./AboutLayout";
 import { Target, Globe, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import { getVisionMission } from "@/services/apiAbout.js";
 import { useVisionMission } from "@/hooks/useVisionMission.js";
 
 export default function VisionMission() {
@@ -18,7 +16,7 @@ export default function VisionMission() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2 }}
           className="group bg-card border p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -51,7 +49,7 @@ export default function VisionMission() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ delay: 0.2 }}
           className="group bg-card border p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
         >

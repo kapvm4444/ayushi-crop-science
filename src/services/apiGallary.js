@@ -1,5 +1,5 @@
-import { getDataByEndPoint } from "@/services/getDataByEndPoint.js";
+import { getDataByEndpoint } from "@/services/getData.js";
 
 export async function getGalleryImages() {
-  return await getDataByEndPoint("gallery");
+  return await getDataByEndpoint("gallery");
 }

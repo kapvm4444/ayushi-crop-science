@@ -28,6 +28,26 @@ export default function ModernHero() {
         return () => clearInterval(interval);
     }, [backgroundImages.length]);
 
+    // Handle initial scroll lock
+    useEffect(() => {
+        const handleWheel = (e) => {
+            // Only capture if we are at the top of the page and scrolling down
+            if (window.scrollY < 50 && e.deltaY > 0) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: window.innerHeight,
+                    behavior: "smooth",
+                });
+            }
+        };
+
+        window.addEventListener("wheel", handleWheel, { passive: false });
+
+        return () => {
+            window.removeEventListener("wheel", handleWheel);
+        };
+    }, []);
+
     return (
         <div className="h-screen relative w-full overflow-hidden flex flex-col items-center justify-center bg-black">
             {/* Animated Background Carousel */}

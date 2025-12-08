@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Facebook,
@@ -9,9 +9,11 @@ import {
   Phone,
   MapPin,
   ChevronRight,
+  Youtube,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TextHoverEffect from "@/components/premium/TextHoverEffect";
+import { useContact } from "@/hooks/useContact";
 
 const SOCIAL_LINKS_DATA = [
   { icon: <Facebook className="h-5 w-5" />, href: "#" },
@@ -28,6 +30,7 @@ const QUICK_LINKS_DATA = [
   { name: "Infrastructure", href: "/about/infrastructure" },
   { name: "Careers", href: "/careers" },
   { name: "Contact Us", href: "/contact" },
+  { name: "Products", href: "/products/insecticides" },
 ];
 
 const PRODUCT_LINKS_DATA = [
@@ -39,33 +42,51 @@ const PRODUCT_LINKS_DATA = [
   { name: "Organic Products", href: "/products/organic" },
 ];
 
-const CONTACT_INFO_DATA = [
-  {
-    icon: <MapPin className="h-5 w-5 text-green-400 shrink-0" />,
-    text: "123 Agriculture Lane, Green Valley, India",
-  },
-  {
-    icon: <Phone className="h-5 w-5 text-green-400 shrink-0" />,
-    text: "+91 98765 43210",
-  },
-  {
-    icon: <Mail className="h-5 w-5 text-green-400 shrink-0" />,
-    text: "info@ayushicrop.com",
-  },
-];
-
 export default function Footer({
   brandName = "Ayushi Crop Science",
   brandDesc = "Empowering farmers with advanced crop protection solutions. We are dedicated to sustainable agriculture and higher yields.",
-  socialLinks = SOCIAL_LINKS_DATA,
   quickLinks = QUICK_LINKS_DATA,
   productLinks = PRODUCT_LINKS_DATA,
-  contactInfo = CONTACT_INFO_DATA,
 }) {
-  const [socials] = useState(socialLinks);
-  const [links] = useState(quickLinks);
-  const [products] = useState(productLinks);
-  const [contacts] = useState(contactInfo);
+  const { contactInfo } = useContact();
+  const [socials, setSocials] = useState(SOCIAL_LINKS_DATA);
+  const [contactDetails, setContactDetails] = useState([]);
+
+  useEffect(() => {
+    if (contactInfo) {
+      // Update Socials
+      const newSocials = [];
+      if (contactInfo.facebook) newSocials.push({ icon: <Facebook className="h-5 w-5" />, href: contactInfo.facebook });
+      if (contactInfo.twitter) newSocials.push({ icon: <Twitter className="h-5 w-5" />, href: contactInfo.twitter });
+      if (contactInfo.instagram) newSocials.push({ icon: <Instagram className="h-5 w-5" />, href: contactInfo.instagram });
+      if (contactInfo.youtube) newSocials.push({ icon: <Youtube className="h-5 w-5" />, href: contactInfo.youtube });
+
+      if (newSocials.length > 0) setSocials(newSocials);
+
+      // Update Contact Details
+      const mainBranch = contactInfo.contactBranch?.find(b => b.preferences === 1) || contactInfo.contactBranch?.[0];
+      const details = [];
+
+      if (mainBranch) {
+        details.push({
+          icon: <MapPin className="h-5 w-5 text-green-400 shrink-0" />,
+          text: mainBranch.address
+        });
+        details.push({
+          icon: <Phone className="h-5 w-5 text-green-400 shrink-0" />,
+          text: mainBranch.contactno
+        });
+      }
+      if (contactInfo.email) {
+        details.push({
+          icon: <Mail className="h-5 w-5 text-green-400 shrink-0" />,
+          text: contactInfo.email
+        });
+      }
+      setContactDetails(details);
+    }
+  }, [contactInfo]);
+
 
   return (
     <footer className="bg-[#052e16] text-white border-t border-green-900 pt-20 pb-0 overflow-hidden relative font-sans">
@@ -91,6 +112,8 @@ export default function Footer({
                 <a
                   key={i}
                   href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
                   className="h-10 w-10 rounded-full bg-green-900/50 flex items-center justify-center text-green-400 hover:bg-green-600 hover:text-white transition-all duration-300"
                 >
                   {social.icon}
@@ -105,7 +128,7 @@ export default function Footer({
               Quick Links
             </h3>
             <ul className="space-y-3">
-              {links.map((link) => (
+              {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}
@@ -125,7 +148,7 @@ export default function Footer({
               Our Products
             </h3>
             <ul className="space-y-3">
-              {products.map((link) => (
+              {productLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}
@@ -146,12 +169,15 @@ export default function Footer({
                 Contact Us
               </h3>
               <ul className="space-y-4">
-                {contacts.map((info, i) => (
+                {(contactDetails.length > 0 ? contactDetails : [
+                  { icon: <MapPin className="h-5 w-5 text-green-400 shrink-0" />, text: "Loading address..." },
+                  { icon: <Mail className="h-5 w-5 text-green-400 shrink-0" />, text: "info@ayushicrop.com" }
+                ]).map((info, i) => (
                   <li key={i} className="flex items-start gap-4 text-gray-400">
                     <div className="mt-1 p-2 rounded-lg bg-green-900/30 text-green-400">
                       {info.icon}
                     </div>
-                    <span className="text-sm leading-relaxed">{info.text}</span>
+                    <span className="text-sm leading-relaxed whitespace-pre-line">{info.text}</span>
                   </li>
                 ))}
               </ul>

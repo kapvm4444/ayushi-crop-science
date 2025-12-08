@@ -36,11 +36,7 @@ export default function Products() {
         <Layout>
             <AuroraHero
                 title="Our Products"
-                subtitle="Explore our wide range of crop protection and nutrition solutions designed for maximum yield."
-                ctaText="Download Catalogue"
-                ctaLink="#"
-                secondaryCtaText="Contact Sales"
-                secondaryCtaLink="/contact"
+                compact={true}
                 backgroundImage="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=2071&auto=format&fit=crop"
             />
 

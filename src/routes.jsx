@@ -46,6 +46,7 @@ const componentMap = {
 
     // News Sub-pages
     "Company News": CompanyNews,
+    "News & Updates": CompanyNews,
     "Events & Media": EventsMedia,
     "Blogs": Blogs,
 

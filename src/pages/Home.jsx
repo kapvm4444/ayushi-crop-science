@@ -185,7 +185,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
@@ -224,7 +224,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.5 }}
           className="container px-4 mx-auto mb-12 text-center"
         >
@@ -258,9 +258,10 @@ export default function Home() {
               key={i}
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="flex-shrink-0 w-[350px] bg-card border p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer whitespace-normal flex flex-col min-h-[280px] snap-start"
+              whileHover={{ y: -8 }}
+              className="flex-shrink-0 w-[350px] bg-card border p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer whitespace-normal flex flex-col min-h-[280px] snap-start"
             >
               <p className="text-muted-foreground mb-6 italic text-lg leading-relaxed flex-grow">
                 &quot;{testimonial.quote}&quot;
@@ -286,7 +287,7 @@ export default function Home() {
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5 }}
               className="section-title"
             >
@@ -299,9 +300,9 @@ export default function Home() {
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="relative p-6 bg-card border rounded-xl shadow-sm hover:shadow-md transition-all group w-full md:w-[calc(25%-2rem)] min-w-[250px]"
+                className="relative p-6 bg-card border rounded-xl shadow-sm hover:shadow-md transition-shadow group w-full md:w-[calc(25%-2rem)] min-w-[250px]"
               >
                 <div className="text-6xl font-bold text-primary/10 absolute top-4 right-4 group-hover:text-primary/20 transition-colors">
                   {process.step}
@@ -325,7 +326,7 @@ export default function Home() {
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5 }}
               className="section-title"
             >
@@ -338,7 +339,7 @@ export default function Home() {
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="group cursor-pointer w-full md:w-[calc(33.33%-2rem)] min-w-[300px]"
               >
@@ -368,7 +369,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5 }}
             className="flex-1"
           >
@@ -383,7 +384,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5 }}
             className="flex-1 space-y-6"
           >

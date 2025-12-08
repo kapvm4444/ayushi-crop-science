@@ -6,7 +6,7 @@ export default function AboutLayout({ title, subtitle, image, children }) {
         <Layout>
             <AuroraHero
                 title={title}
-                subtitle={subtitle}
+                compact={true}
                 backgroundImage={image || "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop"}
             />
             <div className="container px-4 mx-auto py-24">
