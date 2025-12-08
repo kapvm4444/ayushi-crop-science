@@ -19,7 +19,7 @@ export default function FloatingNavbar({
 
   const logo = {
     text: "Ayushi Crop Science",
-    src: isScrolled ? "/logo@2x.png" : "/footer-widget-logo@2x.png",
+    src: "/logo@2x.png",
   };
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function FloatingNavbar({
         <div
           className={cn(
             "flex items-center justify-between px-6 py-3 transition-all duration-500 ease-in-out",
-            "backdrop-blur-md border shadow-xl rounded-full",
+            "backdrop-blur-md border shadow-xl rounded-full gap-5",
             isScrolled /*|| !isHomePage*/
               ? "w-[85%] md:w-[70%] translate-y-2 bg-white/5 dark:bg-black/5 border-green-500/60"
               : "w-[95%] md:w-[90%] bg-transparent border-white/40 shadow-none",
@@ -67,13 +67,11 @@ export default function FloatingNavbar({
                   ? "bg-gradient-to-r from-primary to-green-700"
                   : "bg-gradient-to-r from-white to-white/80",
               )}
-            >
-              {logo.text}
-            </span>
+            ></span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden  lg:flex items-center text-center gap-3">
             {navLinks
               .filter((link) => link.active)
               .map((link, index) => (
@@ -88,7 +86,7 @@ export default function FloatingNavbar({
                       className={cn(
                         "relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full flex items-center gap-1 cursor-default",
                         isScrolled
-                          ? "text-primary hover:bg-primary hover:text-white"
+                          ? "text-primary hover:bg-primary hover:text-white [text-shadow:2px_2px_2px_rgba(0,0,0,0.2)]"
                           : "text-white hover:bg-white/20",
                       )}
                     >
@@ -103,11 +101,11 @@ export default function FloatingNavbar({
                         location.pathname === link.href
                           ? "bg-primary text-white shadow-md"
                           : isScrolled
-                            ? "text-primary hover:bg-primary hover:text-white"
+                            ? "text-primary hover:bg-primary hover:text-white [text-shadow:2px_2px_2px_rgba(0,0,0,0.2)]"
                             : "text-white hover:bg-white/20",
                       )}
                     >
-                      {link.name}
+                      <div className="">{link.name}</div>
                     </Link>
                   )}
 
@@ -155,14 +153,14 @@ export default function FloatingNavbar({
           <div className="flex items-center gap-4">
             {ctaLink ? (
               <Link to={ctaLink}>
-                <Button size="sm" className="rounded-full px-6 hidden md:flex">
+                <Button size="sm" className="rounded-full px-6 hidden lg:flex">
                   {ctaText}
                 </Button>
               </Link>
             ) : (
               <Button
                 size="sm"
-                className="rounded-full px-6 hidden md:flex"
+                className="rounded-full px-6 hidden lg:flex"
                 onClick={onCtaClick}
               >
                 {ctaText}
@@ -173,7 +171,7 @@ export default function FloatingNavbar({
               variant="ghost"
               size="icon"
               className={cn(
-                "md:hidden",
+                "lg:hidden",
                 isScrolled /*|| !isHomePage*/
                   ? "text-foreground"
                   : "text-white",
@@ -193,7 +191,7 @@ export default function FloatingNavbar({
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-sm pt-28 px-6 md:hidden overflow-y-auto"
+            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-sm pt-28 px-6 lg:hidden overflow-y-auto"
           >
             <nav className="flex flex-col gap-6 text-center pb-10">
               {navLinks
