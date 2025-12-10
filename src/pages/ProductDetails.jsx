@@ -119,6 +119,7 @@ export default function ProductDetails() {
             <img
               src={
                 product.product_images?.[0]?.image_path ||
+                product.image ||
                 "https://placehold.co/600x600?text=No+Image"
               }
               alt={product.name}

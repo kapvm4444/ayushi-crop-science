@@ -282,7 +282,7 @@ export default function Footer({
           </p>
           <div className="flex gap-6">
             {!isLoading &&
-              staticPageData.map((page) => (
+              staticPageData?.map((page) => (
                 <>
                   <Link
                     to={`/static/${page.slug}`}

@@ -119,6 +119,7 @@ export default function Products() {
                   <div className="aspect-[4/3] overflow-hidden bg-muted relative">
                     <img
                       src={
+                        product.image ||
                         product.product_images?.[0]?.image ||
                         "https://placehold.co/600x400?text=No+Image"
                       }
