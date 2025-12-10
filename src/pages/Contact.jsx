@@ -18,6 +18,7 @@ import {
 import { motion } from "framer-motion";
 import { useContact } from "@/hooks/useContact.js";
 import { useSubmitContact } from "@/hooks/useSubmitContact.js";
+import { Skeleton } from "@/components/ui/skeleton";
 import ContactMap from "@/components/ContactMap";
 
 const FAQ_DATA = [
@@ -95,130 +96,150 @@ export default function Contact() {
 
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           {/* Left Column: Contact Info & Branches */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            className="space-y-12"
-          >
-            <div>
-              <h2 className="section-title mb-6">Contact Information</h2>
-              <p className="text-muted-foreground text-lg">
-                We are here to help you with any questions or concerns. Find our
-                branches below or send us a message.
-              </p>
-            </div>
-
-            {/* General Contact */}
-            {contactInfo && (
-              <div className="grid gap-6">
-                <div className="flex items-start gap-4 p-6 bg-primary/5 rounded-2xl border border-primary/10">
-                  <div className="bg-primary/10 p-3 rounded-full shrink-0">
-                    <Mail className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Email Us</h3>
-                    <p className="text-muted-foreground">{contactInfo.email}</p>
-                  </div>
-                </div>
-
-                {/* Social Links */}
+          {isLoading ? (
+            <div className="space-y-12">
+              <div>
+                <Skeleton className="h-10 w-48 mb-6" />
+                <Skeleton className="h-6 w-full mb-2" />
+                <Skeleton className="h-6 w-3/4" />
+              </div>
+              <div className="space-y-6">
+                <Skeleton className="h-32 w-full rounded-2xl" />
                 <div className="flex gap-4">
-                  {contactInfo.facebook && (
-                    <a
-                      href={contactInfo.facebook}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-white transition-all hover:scale-110"
-                    >
-                      <Facebook className="h-5 w-5" />
-                    </a>
-                  )}
-                  {contactInfo.twitter && (
-                    <a
-                      href={contactInfo.twitter}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-white transition-all hover:scale-110"
-                    >
-                      <Twitter className="h-5 w-5" />
-                    </a>
-                  )}
-                  {contactInfo.instagram && (
-                    <a
-                      href={contactInfo.instagram}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-white transition-all hover:scale-110"
-                    >
-                      <Instagram className="h-5 w-5" />
-                    </a>
-                  )}
-                  {contactInfo.youtube && (
-                    <a
-                      href={contactInfo.youtube}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-white transition-all hover:scale-110"
-                    >
-                      <Youtube className="h-5 w-5" />
-                    </a>
-                  )}
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <Skeleton className="h-12 w-12 rounded-full" />
                 </div>
               </div>
-            )}
+              <div className="space-y-6">
+                <Skeleton className="h-8 w-40" />
+                <div className="space-y-4">
+                  <Skeleton className="h-40 w-full rounded-2xl" />
+                  <Skeleton className="h-40 w-full rounded-2xl" />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-12">
+              <div>
+                <h2 className="section-title mb-6">Contact Information</h2>
+                <p className="text-muted-foreground text-lg">
+                  We are here to help you with any questions or concerns. Find our
+                  branches below or send us a message.
+                </p>
+              </div>
 
-            {/* Branches List */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold">Our Branches</h3>
-              <div className="grid sm:grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-                {contactInfo?.contactBranch?.map((branch) => (
-                  <div
-                    key={branch.id}
-                    className="bg-card p-6 rounded-2xl border hover:border-primary/50 hover:shadow-md transition-all group"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="mt-1 p-2 bg-secondary rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
-                        <MapPin className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-lg mb-2">
-                          {branch.branchname}
-                        </h4>
-                        <p className="text-muted-foreground text-sm mb-3 leading-relaxed whitespace-pre-line">
-                          {branch.address}
-                        </p>
-
-                        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Phone className="h-3 w-3" />
-                            <span>{branch.contactno}</span>
-                          </div>
-                          {branch.contactno2 && (
-                            <div className="flex items-center gap-1">
-                              <Phone className="h-3 w-3" />
-                              <span>{branch.contactno2}</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {branch.lat && branch.long && (
-                          <a
-                            href={`https://maps.google.com/?q=${branch.lat},${branch.long}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline mt-4"
-                          >
-                            Get Directions &rarr;
-                          </a>
-                        )}
-                      </div>
+              {/* General Contact */}
+              {contactInfo && (
+                <div className="grid gap-6">
+                  <div className="flex items-start gap-4 p-6 bg-primary/5 rounded-2xl border border-primary/10">
+                    <div className="bg-primary/10 p-3 rounded-full shrink-0">
+                      <Mail className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">Email Us</h3>
+                      <p className="text-muted-foreground">{contactInfo.email}</p>
                     </div>
                   </div>
-                ))}
+
+                  {/* Social Links */}
+                  <div className="flex gap-4">
+                    {contactInfo.facebook && (
+                      <a
+                        href={contactInfo.facebook}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-white transition-all hover:scale-110"
+                      >
+                        <Facebook className="h-5 w-5" />
+                      </a>
+                    )}
+                    {contactInfo.twitter && (
+                      <a
+                        href={contactInfo.twitter}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-white transition-all hover:scale-110"
+                      >
+                        <Twitter className="h-5 w-5" />
+                      </a>
+                    )}
+                    {contactInfo.instagram && (
+                      <a
+                        href={contactInfo.instagram}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-white transition-all hover:scale-110"
+                      >
+                        <Instagram className="h-5 w-5" />
+                      </a>
+                    )}
+                    {contactInfo.youtube && (
+                      <a
+                        href={contactInfo.youtube}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-white transition-all hover:scale-110"
+                      >
+                        <Youtube className="h-5 w-5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Branches List */}
+              <div className="space-y-6">
+                <h3 className="text-2xl font-bold">Our Branches</h3>
+                <div className="grid sm:grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                  {contactInfo?.contactBranch?.map((branch) => (
+                    <div
+                      key={branch.id}
+                      className="bg-card p-6 rounded-2xl border hover:border-primary/50 hover:shadow-md transition-all group"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="mt-1 p-2 bg-secondary rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
+                          <MapPin className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-lg mb-2">
+                            {branch.branchname}
+                          </h4>
+                          <p className="text-muted-foreground text-sm mb-3 leading-relaxed whitespace-pre-line">
+                            {branch.address}
+                          </p>
+
+                          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <Phone className="h-3 w-3" />
+                              <span>{branch.contactno}</span>
+                            </div>
+                            {branch.contactno2 && (
+                              <div className="flex items-center gap-1">
+                                <Phone className="h-3 w-3" />
+                                <span>{branch.contactno2}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {branch.lat && branch.long && (
+                            <a
+                              href={`https://maps.google.com/?q=${branch.lat},${branch.long}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline mt-4"
+                            >
+                              Get Directions &rarr;
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </motion.div>
+          )}
 
           {/* Right Column: Contact Form */}
           <motion.div
@@ -234,77 +255,89 @@ export default function Contact() {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-6">
+            {isLoading ? (
+              <div className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-10 w-full" /></div>
+                  <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
+                </div>
+                <div className="space-y-2"><Skeleton className="h-4 w-16" /><Skeleton className="h-10 w-full" /></div>
+                <div className="space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-32 w-full" /></div>
+                <Skeleton className="h-12 w-full rounded-full" />
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="text-sm font-medium">
+                      Full Name
+                    </label>
+                    <Input
+                      id="name"
+                      name="name"
+                      placeholder="John Doe"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-medium">
+                      Email Address
+                    </label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="john@example.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium">
-                    Full Name
+                  <label htmlFor="subject" className="text-sm font-medium">
+                    Subject
                   </label>
                   <Input
-                    id="name"
-                    name="name"
-                    placeholder="John Doe"
-                    value={formData.name}
+                    id="subject"
+                    name="subject"
+                    placeholder="Product Inquiry"
+                    value={formData.subject}
                     onChange={handleChange}
                     required
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium">
-                    Email Address
+                  <label htmlFor="message" className="text-sm font-medium">
+                    Message
                   </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="john@example.com"
-                    value={formData.email}
+                  <Textarea
+                    id="message"
+                    name="message"
+                    placeholder="How can we help you?"
+                    className="min-h-[150px] resize-none"
+                    value={formData.message}
                     onChange={handleChange}
                     required
                   />
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <label htmlFor="subject" className="text-sm font-medium">
-                  Subject
-                </label>
-                <Input
-                  id="subject"
-                  name="subject"
-                  placeholder="Product Inquiry"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-medium">
-                  Message
-                </label>
-                <Textarea
-                  id="message"
-                  name="message"
-                  placeholder="How can we help you?"
-                  className="min-h-[150px] resize-none"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <Button
-                type="submit"
-                disabled={submitContactMutation.isPending}
-                className="w-full text-lg h-12 rounded-full"
-                size="lg"
-              >
-                {submitContactMutation.isPending
-                  ? "Sending..."
-                  : "Send Message"}
-              </Button>
-            </form>
+                <Button
+                  type="submit"
+                  disabled={submitContactMutation.isPending}
+                  className="w-full text-lg h-12 rounded-full"
+                  size="lg"
+                >
+                  {submitContactMutation.isPending
+                    ? "Sending..."
+                    : "Send Message"}
+                </Button>
+              </form>
+            )}
           </motion.div>
         </div>
 

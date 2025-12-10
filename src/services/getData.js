@@ -25,5 +25,5 @@ export async function getDataByEndpoint(
   }
 
   const data = await res.json();
-  return fieldName ? data[fieldName] : data.result;
+  return fieldName ? data[fieldName] : (data.result || data.product || data.categories || data.products || data.states || data.districts || data.talukas || data.villages || data);
 }

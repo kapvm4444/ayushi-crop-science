@@ -42,12 +42,13 @@ export default function Manufacturing() {
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
+                    viewport={{ once: true, amount: 0 }}
                     className="relative rounded-3xl overflow-hidden shadow-2xl aspect-square"
                 >
                     <img
                         src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=2070&auto=format&fit=crop"
                         alt="Lab Testing"
+                        onError={(e) => (e.target.src = "https://placehold.co/800x800?text=Lab+Testing")}
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
@@ -69,7 +70,7 @@ export default function Manufacturing() {
                                 key={i}
                                 initial={{ opacity: 0, x: 50 }}
                                 whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
+                                viewport={{ once: true, amount: 0 }}
                                 transition={{ delay: i * 0.1 }}
                                 className="flex items-start gap-4 bg-secondary/20 p-4 rounded-xl"
                             >

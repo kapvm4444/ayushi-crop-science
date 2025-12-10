@@ -81,14 +81,15 @@ export default function Gallery() {
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true, amount: 0 }}
+                transition={{ duration: 0.3, delay: (i % 4) * 0.1 }}
                 className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px] cursor-pointer"
                 onClick={() => setSelectedImage(image.image)}
               >
                 <img
                   src={image.image}
                   alt={`Gallery ${i + 1}`}
+                  onError={(e) => (e.target.src = "https://placehold.co/600x600?text=No+Image")}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
               </motion.div>
@@ -150,6 +151,7 @@ export default function Gallery() {
               <img
                 src={selectedImage}
                 alt="Gallery Preview"
+                onError={(e) => (e.target.src = "https://placehold.co/600x600?text=No+Image")}
                 className="w-full h-full object-contain max-h-[90vh]"
               />
             </motion.div>

@@ -16,8 +16,9 @@ export default function VisionMission() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          className="group bg-card border p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
+          viewport={{ once: true }}
+          style={{ willChange: "opacity, transform" }}
+          className="group bg-card border p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
             <Globe className="h-32 w-32 text-primary" />
@@ -49,9 +50,10 @@ export default function VisionMission() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="group bg-card border p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
+          style={{ willChange: "opacity, transform" }}
+          className="group bg-card border p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
             <Target className="h-32 w-32 text-primary" />

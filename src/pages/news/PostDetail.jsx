@@ -89,6 +89,7 @@ const PostDetailView = ({
                             <img
                                 src={image}
                                 alt={title}
+                                onError={(e) => (e.target.src = "https://placehold.co/1200x600?text=Image+Not+Found")}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
                         </div>

@@ -80,15 +80,19 @@ export default function CompanyNews() {
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: true, amount: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-card border rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px]"
+              style={{ willChange: "opacity, transform" }}
+              className="bg-card border rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px]"
             >
               <Link to={`/news/${item.slug}`}>
                 <div className="h-48 overflow-hidden">
                   <img
                     src={item.image}
                     alt={item.title}
+                    onError={(e) =>
+                      (e.target.src = "https://placehold.co/600x400?text=News")
+                    }
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>

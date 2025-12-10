@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export default function TextHoverEffect({ text, duration = 0, className }) {
+export default function TextHoverEffect({
+  text,
+  duration = 0,
+  className,
+  autoAnimate = false,
+}) {
   const svgRef = useRef(null);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
@@ -20,6 +25,38 @@ export default function TextHoverEffect({ text, duration = 0, className }) {
     }
   }, [cursor]);
 
+  // Auto-animation effect
+  useEffect(() => {
+    if (autoAnimate && svgRef.current) {
+      const svgRect = svgRef.current.getBoundingClientRect();
+      let direction = 1; // 1 for left to right, -1 for right to left
+      let position = 0;
+
+      const animate = () => {
+        position += direction * 0.5;
+
+        // Reverse direction at boundaries
+        if (position >= 100) {
+          direction = -1;
+          position = 100;
+        } else if (position <= 0) {
+          direction = 1;
+          position = 0;
+        }
+
+        const x = svgRect.left + (position / 100) * svgRect.width;
+        const y = svgRect.top + svgRect.height / 2;
+
+        setCursor({ x, y });
+        setHovered(true);
+      };
+
+      const intervalId = setInterval(animate, 16); // ~60fps
+
+      return () => clearInterval(intervalId);
+    }
+  }, [autoAnimate]);
+
   return (
     <svg
       ref={svgRef}
@@ -27,9 +64,11 @@ export default function TextHoverEffect({ text, duration = 0, className }) {
       height="100%"
       viewBox="0 0 850 80"
       xmlns="http://www.w3.org/2000/svg"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
+      onMouseEnter={() => !autoAnimate && setHovered(true)}
+      onMouseLeave={() => !autoAnimate && setHovered(false)}
+      onMouseMove={(e) =>
+        !autoAnimate && setCursor({ x: e.clientX, y: e.clientY })
+      }
       className={cn("select-none z-50", className)}
     >
       <defs>

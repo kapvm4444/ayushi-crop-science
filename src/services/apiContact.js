@@ -1,7 +1,11 @@
 import { getDataByEndpoint } from "@/services/getData.js";
 
 export async function getContactInfo() {
-  const contactData = await getDataByEndpoint("contactus/list");
+  const contactData = await getDataByEndpoint(
+    "contactus/list",
+    {},
+    "contactus",
+  );
   return contactData[0];
 }
 

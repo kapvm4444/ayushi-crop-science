@@ -1,98 +1,90 @@
-import AboutLayout from "./AboutLayout"
-import { Star, Quote, User } from "lucide-react"
-import { motion } from "framer-motion"
-
-const TESTIMONIALS = [
-    {
-        name: "Ram Lal",
-        location: "Punjab",
-        text: "I have been using Ayushi Crop Science products for the last 5 years. Their 'Super Kill' insecticide saved my cotton crop from bollworm attack. Highly recommended!",
-        rating: 5,
-        role: "Cotton Farmer"
-    },
-    {
-        name: "Suresh Patel",
-        location: "Gujarat",
-        text: "The technical team from Ayushi visited my farm and guided me on proper fertilizer application. My groundnut yield increased by 20% this season.",
-        rating: 5,
-        role: "Groundnut Farmer"
-    },
-    {
-        name: "Anita Devi",
-        location: "Haryana",
-        text: "Quality products at affordable prices. Their customer service is also very helpful. I use their organic range for my vegetable farm.",
-        rating: 4,
-        role: "Organic Farmer"
-    },
-    {
-        name: "Vikram Singh",
-        location: "Madhya Pradesh",
-        text: "Best fungicides in the market. Saved my soybean crop from rust. The results were visible within 3 days of application.",
-        rating: 5,
-        role: "Soybean Farmer"
-    },
-    {
-        name: "Meena Kumari",
-        location: "Uttar Pradesh",
-        text: "I appreciate their commitment to educating farmers. The Kisan Mela organized by them was very informative.",
-        rating: 5,
-        role: "Wheat Farmer"
-    },
-    {
-        name: "Rajesh Kumar",
-        location: "Maharashtra",
-        text: "Reliable and effective. I have been a loyal customer for 10 years now.",
-        rating: 4,
-        role: "Sugarcane Farmer"
-    }
-]
+import AboutLayout from "./AboutLayout";
+import { Star, Quote, User } from "lucide-react";
+import { motion } from "framer-motion";
+import { useTestimonials } from "@/hooks/useTestimonials.js";
 
 export default function Testimonials() {
-    return (
-        <AboutLayout
-            title="Testimonials"
-            subtitle="Hear from the farmers who trust us."
-            image="https://images.unsplash.com/photo-1595839088656-787c886c965e?q=80&w=2070&auto=format&fit=crop"
-        >
-            <div className="max-w-3xl mx-auto text-center mb-16">
-                <p className="text-xl leading-relaxed text-muted-foreground">
-                    Our success is measured by the success of our farmers. Here are some stories from the field that inspire us to work harder every day.
-                </p>
-            </div>
+  const { testimonials, isLoading, error } = useTestimonials();
+  console.log(testimonials); //testimonials data (array)
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {TESTIMONIALS.map((t, i) => (
-                    <motion.div
-                        key={i}
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.1 }}
-                        className="bg-card border p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
-                    >
-                        <Quote className="h-10 w-10 text-primary/20 mb-6" />
-                        <p className="text-lg italic mb-6 flex-grow leading-relaxed">&quot;{t.text}&quot;</p>
+  return (
+    <AboutLayout
+      title="Testimonials"
+      subtitle="Hear from the farmers who trust us."
+      image="https://images.unsplash.com/photo-1595839088656-787c886c965e?q=80&w=2070&auto=format&fit=crop"
+    >
+      <div className="max-w-3xl mx-auto text-center mb-16">
+        <p className="text-xl leading-relaxed text-muted-foreground">
+          Our success is measured by the success of our farmers. Here are some
+          stories from the field that inspire us to work harder every day.
+        </p>
+      </div>
 
-                        <div className="flex items-center gap-4 mt-auto pt-6 border-t">
-                            <div className="h-12 w-12 rounded-full bg-secondary flex items-center justify-center">
-                                <User className="h-6 w-6 text-muted-foreground" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold">{t.name}</h4>
-                                <p className="text-xs text-primary font-medium uppercase tracking-wider">{t.role}, {t.location}</p>
-                            </div>
-                        </div>
-                        <div className="flex gap-1 mt-4">
-                            {[...Array(5)].map((_, i) => (
-                                <Star
-                                    key={i}
-                                    className={`h-4 w-4 ${i < t.rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/30"}`}
-                                />
-                            ))}
-                        </div>
-                    </motion.div>
-                ))}
+      {isLoading ? (
+        <div className="flex flex-wrap justify-center gap-6">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div
+              key={i}
+              className="bg-card border p-8 rounded-3xl shadow-sm space-y-4 w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.33%-1rem)]"
+            >
+              <div className="h-10 w-10 bg-primary/10 rounded-full animate-pulse" />
+              <div className="h-20 bg-muted rounded-xl animate-pulse" />
+              <div className="flex items-center gap-4 mt-auto pt-6 border-t">
+                <div className="h-12 w-12 rounded-full bg-muted animate-pulse" />
+                <div className="space-y-2">
+                  <div className="h-4 w-24 bg-muted rounded animate-pulse" />
+                  <div className="h-3 w-16 bg-muted rounded animate-pulse" />
+                </div>
+              </div>
             </div>
-        </AboutLayout>
-    )
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-wrap justify-center gap-6">
+          {testimonials.map((t, i) => (
+            <motion.div
+              key={t.id || i}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="bg-card border p-8 rounded-3xl shadow-sm hover:shadow-xl flex flex-col group w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.33%-1rem)]"
+            >
+              <Quote className="h-10 w-10 text-primary/20 mb-6 group-hover:text-primary/40 transition-colors" />
+              <p className="text-lg italic mb-6 flex-grow leading-relaxed text-muted-foreground">
+                &quot;{t.content || t.text}&quot;
+              </p>
+
+              <div className="flex items-center gap-4 mt-auto pt-6 border-t">
+                <div className="h-12 w-12 rounded-full bg-secondary overflow-hidden shrink-0">
+                  {t.image ? (
+                    <img
+                      src={t.image}
+                      alt={t.name}
+                      onError={(e) =>
+                      (e.target.src =
+                        "https://placehold.co/100x100?text=User")
+                      }
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <User className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <h4 className="font-bold">{t.name}</h4>
+                  <p className="text-xs text-primary font-medium uppercase tracking-wider">
+                    {t.role}
+                  </p>
+                </div>
+                <div className="ml-auto flex gap-0.5"></div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </AboutLayout>
+  );
 }

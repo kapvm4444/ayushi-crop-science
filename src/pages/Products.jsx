@@ -1,112 +1,192 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import Layout from "@/layout/Layout"
-import { Button } from "@/components/ui/button"
-import AuroraHero from "@/components/premium/AuroraHero"
-import { motion } from "framer-motion"
-
-// Expanded dummy product data
-const PRODUCTS_DATA = [
-    { id: 1, name: "Super Kill 505", category: "Insecticides", image: "https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?q=80&w=2070&auto=format&fit=crop", desc: "Powerful insecticide for cotton and paddy." },
-    { id: 2, name: "Weed Master", category: "Herbicides", image: "https://images.unsplash.com/photo-1585314062604-1a357de8b000?q=80&w=2070&auto=format&fit=crop", desc: "Effective control of broadleaf weeds." },
-    { id: 3, name: "Fungi Stop", category: "Fungicides", image: "https://images.unsplash.com/photo-1615811361269-669f43e3e2a9?q=80&w=2070&auto=format&fit=crop", desc: "Systemic fungicide for fruit crops." },
-    { id: 4, name: "Growth Booster", category: "PGR", image: "https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?q=80&w=2070&auto=format&fit=crop", desc: "Enhances plant growth and yield." },
-    { id: 5, name: "Root Power", category: "Fertilizers", image: "https://images.unsplash.com/photo-1628352081506-83c43123ed6d?q=80&w=2096&auto=format&fit=crop", desc: "Promotes strong root development." },
-    { id: 6, name: "Termite X", category: "Insecticides", image: "https://images.unsplash.com/photo-1560493676-04071c5f467b?q=80&w=1974&auto=format&fit=crop", desc: "Long-lasting termite control." },
-    { id: 7, name: "Bio Shield", category: "Organic", image: "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=2070&auto=format&fit=crop", desc: "100% organic crop protection." },
-    { id: 8, name: "Yield Max", category: "PGR", image: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=2070&auto=format&fit=crop", desc: "Maximizes crop yield potential." },
-    { id: 9, name: "Soil Gold", category: "Fertilizers", image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=2070&auto=format&fit=crop", desc: "Enriches soil with micronutrients." },
-    { id: 10, name: "Pest Guard", category: "Insecticides", image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=2070&auto=format&fit=crop", desc: "Broad-spectrum pest control." },
-    { id: 11, name: "Aqua Safe", category: "Herbicides", image: "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?q=80&w=2072&auto=format&fit=crop", desc: "Safe for aquatic environments." },
-    { id: 12, name: "Leaf Shine", category: "Fungicides", image: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=1527&auto=format&fit=crop", desc: "Prevents leaf spot diseases." },
-]
-
-const CATEGORIES_DATA = ["All", "Insecticides", "Herbicides", "Fungicides", "PGR", "Fertilizers", "Organic"]
+import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
+import Layout from "@/layout/Layout";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import AuroraHero from "@/components/premium/AuroraHero";
+import { motion } from "framer-motion";
+import { useProducts, useCategories } from "@/hooks/useProducts";
+import { ChevronLeft, ChevronRight, Leaf, ArrowRight } from "lucide-react";
 
 export default function Products() {
-    const [products] = useState(PRODUCTS_DATA)
-    const [categories] = useState(CATEGORIES_DATA)
-    const [activeCategory, setActiveCategory] = useState("All")
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 16;
 
-    const filteredProducts = activeCategory === "All"
-        ? products
-        : products.filter(p => p.category === activeCategory)
+  // Fetch Data
+  const { data: products, isLoading: isProductsLoading } = useProducts(); // Fetch all items
+  const { data: categories, isLoading: isCatsLoading } = useCategories();
 
-    return (
-        <Layout>
-            <AuroraHero
-                title="Our Products"
-                compact={true}
-                backgroundImage="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=2071&auto=format&fit=crop"
-            />
+  // Pagination Logic
+  const totalPages = Math.ceil((products?.length || 0) / itemsPerPage);
+  const paginatedProducts = useMemo(() => {
+    if (!products) return [];
+    const start = (currentPage - 1) * itemsPerPage;
+    return products.slice(start, start + itemsPerPage);
+  }, [products, currentPage]);
 
-            <div className="container px-4 mx-auto py-24 pt-32">
-                {/* Category Filter */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center mb-12"
-                >
-                    <h2 className="section-title">Explore Our Range</h2>
-                </motion.div>
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                    className="flex flex-wrap justify-center gap-3 mb-16"
-                >
-                    {categories.map((cat) => (
-                        <Button
-                            key={cat}
-                            variant={activeCategory === cat ? "premium" : "outline"}
-                            onClick={() => setActiveCategory(cat)}
-                            className="rounded-full px-6"
-                        >
-                            {cat}
-                        </Button>
-                    ))}
-                </motion.div>
+  // Slugify Helper
+  function slugify(text) {
+    return text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "")
+      .replace(/-+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
+  }
 
-                {/* Product Grid */}
-                <div className="flex flex-wrap justify-center gap-8">
-                    {filteredProducts.map((product) => (
-                        <motion.div
-                            key={product.id}
-                            layout
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="group bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] xl:w-[calc(25%-2rem)] min-w-[280px]"
-                        >
-                            <div className="aspect-[4/3] overflow-hidden bg-muted relative">
-                                <img
-                                    src={product.image}
-                                    alt={product.name}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                    loading="lazy"
-                                />
-                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            </div>
-                            <div className="p-6">
-                                <div className="text-xs font-bold text-primary mb-2 uppercase tracking-wider">
-                                    {product.category}
-                                </div>
-                                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{product.name}</h3>
-                                <p className="text-muted-foreground text-sm mb-6 line-clamp-2">
-                                    {product.desc}
-                                </p>
-                                <Link to={`/products/${product.id}`}>
-                                    <Button className="w-full rounded-full" variant="premium">
-                                        View Details
-                                    </Button>
-                                </Link>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
+  return (
+    <Layout>
+      <AuroraHero
+        title="Our Products"
+        compact={true}
+        backgroundImage="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=2071&auto=format&fit=crop"
+      />
+
+      <div className="container px-4 mx-auto py-24 pt-32">
+        {/* Category Links */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
+          <h2 className="section-title mb-8">Explore Our Range</h2>
+          {isCatsLoading ? (
+            <div className="flex flex-wrap justify-center gap-3 mb-16">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Skeleton key={i} className="h-10 w-32 rounded-full" />
+              ))}
             </div>
-        </Layout>
-    )
+          ) : (
+            <div className="flex flex-wrap justify-center gap-3 mb-16">
+              <Button variant="premium" className="rounded-full px-6">
+                All Products
+              </Button>
+              {categories?.map((cat) => (
+                <Link
+                  key={cat.id}
+                  to={`/products/category/${slugify(cat.name)}`}
+                >
+                  <Button variant="outline" className="rounded-full px-6">
+                    {cat.name}
+                  </Button>
+                </Link>
+              ))}
+            </div>
+          )}
+        </motion.div>
+
+        {/* Product Grid */}
+        {isProductsLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div
+                key={i}
+                className="flex flex-col space-y-3 rounded-2xl border p-4"
+              >
+                <Skeleton className="h-[200px] w-full rounded-xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-1/3" />
+                  <Skeleton className="h-6 w-3/4" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-10 w-full rounded-full mt-4" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : paginatedProducts.length > 0 ? (
+          <>
+            <div className="flex flex-wrap justify-center gap-8">
+              {paginatedProducts.map((product, i) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0 }}
+                  transition={{ duration: 0.5, delay: (i % 4) * 0.1 }}
+                  style={{ willChange: "opacity, transform" }}
+                  className="group bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.33%-2rem)] xl:w-[calc(25%-2rem)] min-w-[300px]"
+                >
+                  <div className="aspect-[4/3] overflow-hidden bg-muted relative">
+                    <img
+                      src={
+                        product.product_images?.[0]?.image ||
+                        "https://placehold.co/600x400?text=No+Image"
+                      }
+                      alt={product.name}
+                      onError={(e) =>
+                        (e.target.src =
+                          "https://placehold.co/600x400?text=No+Image")
+                      }
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="text-xs font-bold text-primary mb-2 uppercase tracking-wider">
+                      {product.category_name || "Product"}
+                    </div>
+                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1">
+                      {product.name}
+                    </h3>
+                    <div className="text-muted-foreground text-sm mb-6 line-clamp-2 flex-grow">
+                      {product.features ||
+                        product.description ||
+                        "No description available."}
+                    </div>
+                    <Link to={`/products/${product.id}`} className="mt-auto">
+                      <Button className="w-full rounded-full" variant="premium">
+                        View Details <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </Link>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-4 mt-16">
+                <Button
+                  variant="outline"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="h-4 w-4 mr-2" /> Previous
+                </Button>
+                <span className="text-sm font-medium">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next <ChevronRight className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-20">
+            <Leaf className="h-16 w-16 text-muted-foreground mx-auto mb-4 opacity-50" />
+            <h2 className="text-2xl font-bold mb-2">No Products Available</h2>
+            <p className="text-muted-foreground">
+              Our catalog is currently being updated.
+            </p>
+          </div>
+        )}
+      </div>
+    </Layout>
+  );
 }

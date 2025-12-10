@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   ShieldCheck,
   Sprout,
@@ -14,6 +14,11 @@ import CountUp from "@/components/premium/CountUp";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import LightRays from "@/components/premium/LightRays";
+import { useTestimonials } from "@/hooks/useTestimonials.js";
+import { useNews } from "@/hooks/useNews.js";
+import { useProducts } from "@/hooks/useProducts.js";
+import { useStaticPages } from "@/hooks/useStaticPages.js";
+import { useWhoWeAre } from "@/hooks/useWhoWeAre.js";
 
 const FEATURES_DATA = [
   {
@@ -103,25 +108,25 @@ const PROCESS_DATA = [
 
 const NEWS_DATA = [
   {
-    title: "New Organic Range Launch",
-    date: "Oct 15, 2023",
+    title: "Launch of 'Super Yield' Growth Booster",
+    date: "Dec 01, 2023",
     image:
-      "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?q=80&w=2070&auto=format&fit=crop",
-    desc: "Introducing our new line of 100% organic pesticides for sustainable farming.",
+      "https://images.unsplash.com/photo-1595839088656-787c886c965e?q=80&w=2070&auto=format&fit=crop",
+    desc: "Introducing our revolutionary plant growth regulator that increases yield by up to 25%.",
   },
   {
-    title: "Farmer Training Workshop",
-    date: "Sep 28, 2023",
+    title: "Ayushi Crop Science at Kisan Mela 2023",
+    date: "Nov 15, 2023",
     image:
-      "https://images.unsplash.com/photo-1615811361269-669f43e3e2a9?q=80&w=2070&auto=format&fit=crop",
-    desc: "Over 500 farmers attended our workshop on modern crop protection techniques.",
+      "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2074&auto=format&fit=crop",
+    desc: "We showcased our latest innovations to over 2000 farmers at the annual Kisan Mela.",
   },
   {
-    title: "Award for Innovation",
-    date: "Aug 10, 2023",
+    title: "Expansion into South Indian Markets",
+    date: "Oct 20, 2023",
     image:
-      "https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=2070&auto=format&fit=crop",
-    desc: "Ayushi Crop Science receives the prestigious National Agrotech Innovation Award.",
+      "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=2070&auto=format&fit=crop",
+    desc: "Extending our dealership network to serve farmers in Karnataka and Tamil Nadu.",
   },
 ];
 
@@ -134,22 +139,31 @@ const ABOUT_POINTS_DATA = [
 
 export default function Home() {
   const [features] = useState(FEATURES_DATA);
-  const [stats] = useState(STATS_DATA);
-  const [testimonials] = useState(TESTIMONIALS_DATA);
+  const { products: fetchedProducts } = useProducts();
+  const [stats, setStats] = useState(STATS_DATA);
+
+  const { testimonials: fetchedTestimonials } = useTestimonials();
+  const { news: fetchedNews } = useNews();
   const [process] = useState(PROCESS_DATA);
-  const [news] = useState(NEWS_DATA);
-  const [aboutPoints] = useState(ABOUT_POINTS_DATA);
+  const [aboutPoints, setAboutPoints] = useState(ABOUT_POINTS_DATA);
   const scrollContainerRef = useRef(null);
+
+  const testimonials =
+    fetchedTestimonials && fetchedTestimonials.length > 0
+      ? fetchedTestimonials
+      : TESTIMONIALS_DATA;
+  const news = fetchedNews && fetchedNews.length > 0 ? fetchedNews : NEWS_DATA;
 
   const scroll = (direction) => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 400;
+      const container = scrollContainerRef.current;
+      const scrollAmount = container.clientWidth * 0.8; // Scroll 80% of container width
       const newScrollLeft =
         direction === "left"
-          ? scrollContainerRef.current.scrollLeft - scrollAmount
-          : scrollContainerRef.current.scrollLeft + scrollAmount;
+          ? container.scrollLeft - scrollAmount
+          : container.scrollLeft + scrollAmount;
 
-      scrollContainerRef.current.scrollTo({
+      container.scrollTo({
         left: newScrollLeft,
         behavior: "smooth",
       });
@@ -185,7 +199,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
@@ -224,7 +238,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           className="container px-4 mx-auto mb-12 text-center"
         >
@@ -250,7 +264,7 @@ export default function Home() {
         </motion.div>
         <div
           ref={scrollContainerRef}
-          className="flex overflow-x-auto gap-8 pb-8 px-4 container mx-auto scrollbar-hide snap-x snap-mandatory"
+          className="flex overflow-x-auto gap-8 pb-8 px-4 container mx-auto scrollbar-hide"
           style={{ scrollBehavior: "smooth" }}
         >
           {testimonials.map((testimonial, i) => (
@@ -258,22 +272,39 @@ export default function Home() {
               key={i}
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               whileHover={{ y: -8 }}
-              className="flex-shrink-0 w-[350px] bg-card border p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer whitespace-normal flex flex-col min-h-[280px] snap-start"
+              className="flex-shrink-0 w-[350px] bg-card border p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer whitespace-normal flex flex-col min-h-[280px]"
             >
               <p className="text-muted-foreground mb-6 italic text-lg leading-relaxed flex-grow">
-                &quot;{testimonial.quote}&quot;
+                &quot;
+                {testimonial.content || testimonial.text || testimonial.quote}
+                &quot;
               </p>
               <div className="flex items-center gap-4 mt-auto">
-                <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xl shrink-0">
-                  {testimonial.name[0]}
+                <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xl shrink-0 overflow-hidden">
+                  {testimonial.image ? (
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      onError={(e) =>
+                        (e.target.src =
+                          "https://placehold.co/100x100?text=User")
+                      }
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    testimonial.name[0]
+                  )}
                 </div>
                 <div>
                   <div className="font-bold text-lg">{testimonial.name}</div>
-                  <div className="text-sm text-primary">{testimonial.role}</div>
+                  <div className="text-sm text-primary">
+                    {testimonial.role || "Farmer"}
+                  </div>
                 </div>
+                <div className="ml-auto flex gap-0.5"></div>
               </div>
             </motion.div>
           ))}
@@ -287,7 +318,7 @@ export default function Home() {
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="section-title"
             >
@@ -300,7 +331,7 @@ export default function Home() {
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="relative p-6 bg-card border rounded-xl shadow-sm hover:shadow-md transition-shadow group w-full md:w-[calc(25%-2rem)] min-w-[250px]"
               >
@@ -326,7 +357,7 @@ export default function Home() {
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="section-title"
             >
@@ -334,12 +365,12 @@ export default function Home() {
             </motion.h2>
           </div>
           <div className="flex flex-wrap justify-center gap-8">
-            {news.map((news, i) => (
+            {news.slice(0, 3).map((news, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="group cursor-pointer w-full md:w-[calc(33.33%-2rem)] min-w-[300px]"
               >
@@ -347,6 +378,9 @@ export default function Home() {
                   <img
                     src={news.image}
                     alt={news.title}
+                    onError={(e) =>
+                      (e.target.src = "https://placehold.co/600x400?text=News")
+                    }
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
@@ -356,7 +390,9 @@ export default function Home() {
                 <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
                   {news.title}
                 </h3>
-                <p className="text-muted-foreground">{news.desc}</p>
+                <p className="text-muted-foreground line-clamp-3">
+                  {news.desc || news.short_description}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -369,7 +405,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="flex-1"
           >
@@ -377,6 +413,9 @@ export default function Home() {
               <img
                 src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=2070&auto=format&fit=crop"
                 alt="Futuristic Agriculture"
+                onError={(e) =>
+                  (e.target.src = "https://placehold.co/800x600?text=About+Us")
+                }
                 className="w-full h-full object-cover"
               />
             </div>
@@ -384,7 +423,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="flex-1 space-y-6"
           >

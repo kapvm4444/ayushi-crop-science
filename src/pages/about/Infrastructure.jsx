@@ -60,6 +60,7 @@ export default function Infrastructure() {
                                 <img
                                     src={section.image}
                                     alt={section.title}
+                                    onError={(e) => (e.target.src = "https://placehold.co/800x500?text=Infrastructure")}
                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
