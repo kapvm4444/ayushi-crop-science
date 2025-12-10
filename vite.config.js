@@ -12,7 +12,10 @@ export default defineConfig({
     port: 3000,
     host: true,
     cors: true,
-    allowedHosts: ["ayushi.idestinytechlab.com"],
+    allowedHosts: [
+      "ayushi.idestinytechlab.com",
+      "ayushiapi.idestinytechlab.com",
+    ],
   },
   plugins: [react()],
   resolve: {

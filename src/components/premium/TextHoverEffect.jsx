@@ -27,33 +27,38 @@ export default function TextHoverEffect({
 
   // Auto-animation effect
   useEffect(() => {
-    if (autoAnimate && svgRef.current) {
-      const svgRect = svgRef.current.getBoundingClientRect();
-      let direction = 1; // 1 for left to right, -1 for right to left
-      let position = 0;
+    if (autoAnimate) {
+      // If auto-animate is valid, set hovered to true so the gradient shows
+      setHovered(true);
 
-      const animate = () => {
-        position += direction * 0.5;
+      let startTime;
+      let animationFrameId;
 
-        // Reverse direction at boundaries
-        if (position >= 100) {
-          direction = -1;
-          position = 100;
-        } else if (position <= 0) {
-          direction = 1;
-          position = 0;
-        }
+      const animate = (timestamp) => {
+        if (!startTime) startTime = timestamp;
+        const progress = timestamp - startTime;
 
-        const x = svgRect.left + (position / 100) * svgRect.width;
-        const y = svgRect.top + svgRect.height / 2;
+        // Speed of the ping-pong animation (4000ms for one full cycle 0->100->0)
+        const cycleDuration = 4000;
 
-        setCursor({ x, y });
-        setHovered(true);
+        // Calculate position based on a sine wave for smooth left-right-left motion
+        // (Math.sin(...) + 1) / 2 oscillates between 0 and 1
+        const position = (Math.sin((progress / cycleDuration) * Math.PI * 2 - Math.PI / 2) + 1) / 2;
+
+        // Convert to percentage for the mask
+        const percentage = position * 100;
+
+        setMaskPosition({
+          cx: `${percentage}%`,
+          cy: "50%", // Keep vertical center fixed
+        });
+
+        animationFrameId = requestAnimationFrame(animate);
       };
 
-      const intervalId = setInterval(animate, 16); // ~60fps
+      animationFrameId = requestAnimationFrame(animate);
 
-      return () => clearInterval(intervalId);
+      return () => cancelAnimationFrame(animationFrameId);
     }
   }, [autoAnimate]);
 

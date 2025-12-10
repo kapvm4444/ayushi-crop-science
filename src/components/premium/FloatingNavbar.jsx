@@ -28,7 +28,6 @@ export default function FloatingNavbar({
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      console.log("Scroll Position:", scrollPosition); // Debugging
       setIsScrolled(scrollPosition > 20);
     };
 

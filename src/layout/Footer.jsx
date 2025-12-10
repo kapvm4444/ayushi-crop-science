@@ -283,14 +283,13 @@ export default function Footer({
           <div className="flex gap-6">
             {!isLoading &&
               staticPageData?.map((page) => (
-                <>
-                  <Link
-                    to={`/static/${page.slug}`}
-                    className="hover:text-green-400 transition-colors"
-                  >
-                    {page.title}
-                  </Link>
-                </>
+                <Link
+                  key={page.slug}
+                  to={`/static/${page.slug}`}
+                  className="hover:text-green-400 transition-colors"
+                >
+                  {page.title}
+                </Link>
               ))}
           </div>
         </div>
