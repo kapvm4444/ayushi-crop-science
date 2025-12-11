@@ -56,15 +56,16 @@ export default function USP() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
         {USPS.map((item, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="group relative bg-card border hover:border-primary/50 p-8 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col items-center text-center overflow-hidden"
+            style={{ willChange: "opacity, transform" }}
+            className="group relative bg-card border hover:border-primary/50 p-8 rounded-3xl shadow-sm hover:shadow-2xl transition-shadow transition-colors duration-300 flex flex-col items-center text-center overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -90,10 +91,10 @@ export default function USP() {
             More Than Just Products
           </h3>
           <p className="text-primary-foreground/90 text-lg leading-relaxed mb-8">
-            We don&apos;t just sell products; we provide complete crop solutions.
-            Our team of experts works closely with farmers to understand their
-            specific needs and recommend the right products for their crops and
-            soil conditions.
+            We don&apos;t just sell products; we provide complete crop
+            solutions. Our team of experts works closely with farmers to
+            understand their specific needs and recommend the right products for
+            their crops and soil conditions.
           </p>
         </div>
       </div>

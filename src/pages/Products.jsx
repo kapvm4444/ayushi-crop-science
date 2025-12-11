@@ -7,6 +7,7 @@ import AuroraHero from "@/components/premium/AuroraHero";
 import { motion } from "framer-motion";
 import { useProducts, useCategories } from "@/hooks/useProducts";
 import { ChevronLeft, ChevronRight, Leaf, ArrowRight } from "lucide-react";
+import { ProductCardGroup } from "@/components/products/ProductCardGroup";
 
 export default function Products() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -105,55 +106,7 @@ export default function Products() {
           </div>
         ) : paginatedProducts.length > 0 ? (
           <>
-            <div className="flex flex-wrap justify-center gap-8">
-              {paginatedProducts.map((product, i) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0 }}
-                  transition={{ duration: 0.5, delay: (i % 4) * 0.1 }}
-                  style={{ willChange: "opacity, transform" }}
-                  className="group bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.33%-2rem)] xl:w-[calc(25%-2rem)] min-w-[300px]"
-                >
-                  <div className="aspect-[4/3] overflow-hidden bg-muted relative">
-                    <img
-                      src={
-                        product.image ||
-                        product.product_images?.[0]?.image ||
-                        "https://placehold.co/600x400?text=No+Image"
-                      }
-                      alt={product.name}
-                      onError={(e) =>
-                        (e.target.src =
-                          "https://placehold.co/600x400?text=No+Image")
-                      }
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-                  <div className="p-6 flex flex-col flex-grow">
-                    <div className="text-xs font-bold text-primary mb-2 uppercase tracking-wider">
-                      {product.category_name || "Product"}
-                    </div>
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1">
-                      {product.name}
-                    </h3>
-                    <div className="text-muted-foreground text-sm mb-6 line-clamp-2 flex-grow">
-                      {product.features ||
-                        product.description ||
-                        "No description available."}
-                    </div>
-                    <Link to={`/products/${product.id}`} className="mt-auto">
-                      <Button className="w-full rounded-full" variant="premium">
-                        View Details <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            <ProductCardGroup products={paginatedProducts} />
 
             {/* Pagination Controls */}
             {totalPages > 1 && (

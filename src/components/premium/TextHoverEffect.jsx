@@ -39,7 +39,7 @@ export default function TextHoverEffect({
         const progress = timestamp - startTime;
 
         // Speed of the ping-pong animation (4000ms for one full cycle 0->100->0)
-        const cycleDuration = 4000;
+        const cycleDuration = 8000;
 
         // Calculate position based on a sine wave for smooth left-right-left motion
         // (Math.sin(...) + 1) / 2 oscillates between 0 and 1

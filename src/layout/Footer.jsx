@@ -247,7 +247,7 @@ export default function Footer({
               </ul>
             </div>
 
-            <div>
+            {/*<div>
               <h3 className="text-lg font-bold mb-4 text-green-400 font-heading">
                 Newsletter
               </h3>
@@ -261,7 +261,7 @@ export default function Footer({
                   Subscribe Now
                 </Button>
               </div>
-            </div>
+            </div>*/}
           </div>
         </div>
 

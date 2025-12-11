@@ -92,7 +92,7 @@ const mapStyles = [
 export default function ContactMap({ locations = [] }) {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "AIzaSyBUjsj2YC07ivfuTGi63yBp3xpeRwRMdj4", // User handles key
+    googleMapsApiKey: "",
   });
 
   const [map, setMap] = useState(null);

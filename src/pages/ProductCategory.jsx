@@ -2,11 +2,11 @@ import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/layout/Layout";
 import AuroraHero from "@/components/premium/AuroraHero";
-import { motion } from "framer-motion";
 import { ArrowRight, Leaf, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProducts, useCategories } from "@/hooks/useProducts";
+import { ProductCardGroup } from "@/components/products/ProductCardGroup";
 
 export default function ProductCategory() {
   const { categoryId: categorySlug } = useParams();
@@ -17,7 +17,6 @@ export default function ProductCategory() {
   const { data: categories, isLoading: isCatsLoading } = useCategories();
 
   // Find current category based on slug
-  // Helper for simple slugify if not in utils
   function slugify(text) {
     return (
       text
@@ -49,6 +48,16 @@ export default function ProductCategory() {
     const start = (currentPage - 1) * itemsPerPage;
     return products.slice(start, start + itemsPerPage);
   }, [products, currentPage]);
+
+  // Ensure products have the category name for the card
+  const displayProducts = useMemo(() => {
+    if (!currentCategory) return paginatedProducts;
+    return paginatedProducts.map(p => ({
+      ...p,
+      category_name: currentCategory.name
+    }));
+  }, [paginatedProducts, currentCategory]);
+
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -111,57 +120,9 @@ export default function ProductCategory() {
       />
 
       <div className="container px-4 mx-auto py-24">
-        {paginatedProducts.length > 0 ? (
+        {displayProducts.length > 0 ? (
           <>
-            <div className="flex flex-wrap justify-center gap-8">
-              {paginatedProducts.map((product, i) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0 }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  style={{ willChange: "opacity, transform" }}
-                  className="group bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.33%-2rem)] xl:w-[calc(25%-2rem)] min-w-[300px]"
-                >
-                  <div className="aspect-[4/3] overflow-hidden bg-muted relative">
-                    <img
-                      src={
-                        product.product_images?.[0]?.image_path ||
-                        "https://placehold.co/600x400?text=No+Image"
-                      }
-                      alt={product.name}
-                      onError={(e) =>
-                        (e.target.src =
-                          "https://placehold.co/600x400?text=No+Image")
-                      }
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary uppercase tracking-wider">
-                      {product.brand}
-                    </div>
-                  </div>
-                  <div className="p-6 flex flex-col flex-grow">
-                    <div className="text-xs font-bold text-primary mb-2 uppercase tracking-wider">
-                      {currentCategory.name}
-                    </div>
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1">
-                      {product.name}
-                    </h3>
-                    <div className="text-muted-foreground text-sm mb-6 line-clamp-2 flex-grow">
-                      {product.features ||
-                        product.description ||
-                        "No description available."}
-                    </div>
-                    <Link to={`/products/${product.id}`} className="mt-auto">
-                      <Button className="w-full rounded-full" variant="premium">
-                        View Details <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            <ProductCardGroup products={displayProducts} />
 
             {/* Pagination Controls */}
             {totalPages > 1 && (

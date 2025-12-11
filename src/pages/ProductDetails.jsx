@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import { useProductDetails } from "@/hooks/useProducts";
 import { Skeleton } from "@/components/ui/skeleton";
+import AuroraHero from "@/components/premium/AuroraHero";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -75,30 +76,13 @@ export default function ProductDetails() {
 
   return (
     <Layout>
-      {/* Hero Background with Product Category */}
-      <div className="relative w-full h-[40vh] min-h-[300px] bg-gradient-to-br from-primary/20 via-secondary/30 to-primary/10 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
-        <div className="container px-4 mx-auto relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="inline-block px-4 py-2 bg-primary/20 backdrop-blur-sm rounded-full text-primary font-bold mb-4">
-              {product.category_name || "Product"}
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              {product.name}
-            </h1>
-            {product.techname && (
-              <p className="text-xl text-muted-foreground">
-                {product.techname}
-              </p>
-            )}
-          </motion.div>
-        </div>
-      </div>
+      {/* Hero Background using AuroraHero for consistent navbar visibility */}
+      <AuroraHero
+        title={product.name}
+        subtitle={product.category_name || "Product"}
+        compact={true}
+        backgroundImage="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop"
+      />
 
       <div className="container px-4 mx-auto py-24">
         <Link
