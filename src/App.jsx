@@ -25,7 +25,7 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        {import.meta.env.VITE_MODE === "production" && <ReactQueryDevtools />}
+        {import.meta.env.VITE_MODE === "development" && <ReactQueryDevtools />}
         <Router>
           <ScrollToTop />
           <div className="min-h-screen bg-background text-foreground font-sans antialiased overflow-x-hidden">
