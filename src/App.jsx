@@ -5,6 +5,7 @@ import ScrollToTop from "@/components/ui/ScrollToTop";
 import routes from "./routes";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ReactDOM from "react-dom/client";
 
 function AppRoutes() {
   const element = useRoutes(routes);
@@ -24,7 +25,7 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools />
+        {import.meta.env.VITE_MODE === "production" && <ReactQueryDevtools />}
         <Router>
           <ScrollToTop />
           <div className="min-h-screen bg-background text-foreground font-sans antialiased overflow-x-hidden">
