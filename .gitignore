@@ -40,6 +40,5 @@ coverage
 
 # Vite
 .vite/
+folderStructure
 
-# Agent file
-.agent

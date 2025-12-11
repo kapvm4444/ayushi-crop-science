@@ -8,6 +8,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  /*  build: {
+    ssr: true,
+    rollupOptions: {
+      input: "./server/index.js",
+    },
+  },*/
   server: {
     port: 3000,
     host: true,
