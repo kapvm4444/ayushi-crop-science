@@ -40,6 +40,8 @@ coverage
 
 # Vite
 .vite/
+.next/
 folderStructure
 newUpdatedFiles
+src/temp_merge
 
