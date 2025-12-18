@@ -1,17 +1,31 @@
-import Layout from "@/layout/Layout";
+"use client";
+
+import { useState } from "react";
 import AuroraHero from "@/components/premium/AuroraHero";
 import { motion } from "framer-motion";
-import { Calendar } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { useNews } from "@/hooks/useNews.js";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 export default function CompanyNews() {
-  const { news, isLoading, error } = useNews();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { news: newsData, isLoading, error } = useNews(null, currentPage);
+
+  const news = newsData?.data || [];
+  const totalPages = newsData?.last_page || 1;
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   if (isLoading) {
     return (
-      <Layout>
+      <>
         <AuroraHero
           title="Company News"
           compact={true}
@@ -41,13 +55,13 @@ export default function CompanyNews() {
             ))}
           </div>
         </div>
-      </Layout>
+      </>
     );
   }
 
   if (error) {
     return (
-      <Layout>
+      <>
         <AuroraHero
           title="Company News"
           compact={true}
@@ -59,12 +73,12 @@ export default function CompanyNews() {
           </h2>
           <p className="text-muted-foreground mt-2">Please try again later.</p>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <AuroraHero
         title="Company News"
         compact={true}
@@ -85,7 +99,7 @@ export default function CompanyNews() {
               style={{ willChange: "opacity, transform" }}
               className="bg-card border rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px]"
             >
-              <Link to={`/news/${item.slug}`}>
+              <Link href={`/news/${item.slug}`}>
                 <div className="h-48 overflow-hidden">
                   <img
                     src={item.image}
@@ -113,7 +127,30 @@ export default function CompanyNews() {
             </motion.div>
           ))}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-16">
+            <Button
+              variant="outline"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4 mr-2" /> Previous
+            </Button>
+            <span className="text-sm font-medium">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next <ChevronRight className="h-4 w-4 ml-2" />
+            </Button>
+          </div>
+        )}
       </div>
-    </Layout>
+    </>
   );
 }

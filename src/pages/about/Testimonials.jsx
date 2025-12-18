@@ -1,3 +1,5 @@
+"use client";
+
 import AboutLayout from "./AboutLayout";
 import { Star, Quote, User } from "lucide-react";
 import { motion } from "framer-motion";

@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import {
   Facebook,
   Twitter,
@@ -88,21 +90,39 @@ export default function Footer({
       if (newSocials.length > 0) setSocials(newSocials);
 
       // Update Contact Details
-      const mainBranch =
-        contactInfo.contactBranch?.find((b) => b.preferences === 1) ||
-        contactInfo.contactBranch?.[0];
       const details = [];
 
-      if (mainBranch) {
+      // Address
+      if (contactInfo.default_address) {
         details.push({
           icon: <MapPin className="h-5 w-5 text-green-400 shrink-0" />,
-          text: mainBranch.address,
+          text: contactInfo.default_address,
         });
+      } else {
+        const mainBranch =
+          contactInfo.contactBranch?.find((b) => b.preferences === 1) ||
+          contactInfo.contactBranch?.[0];
+        if (mainBranch) {
+          details.push({
+            icon: <MapPin className="h-5 w-5 text-green-400 shrink-0" />,
+            text: mainBranch.address,
+          });
+        }
+      }
+
+      // Phone (Use branch contact as explicit fallback verified)
+      const mainBranchForPhone =
+        contactInfo.contactBranch?.find((b) => b.preferences === 1) ||
+        contactInfo.contactBranch?.[0];
+
+      if (mainBranchForPhone && mainBranchForPhone.contactno) {
         details.push({
           icon: <Phone className="h-5 w-5 text-green-400 shrink-0" />,
-          text: mainBranch.contactno,
+          text: mainBranchForPhone.contactno,
         });
       }
+
+      // Email
       if (contactInfo.email) {
         details.push({
           icon: <Mail className="h-5 w-5 text-green-400 shrink-0" />,
@@ -123,6 +143,8 @@ export default function Footer({
     }
   }, [categories]);
 
+  console.log(contactInfo);
+
   return (
     <footer className="bg-[#052e16] text-white border-t border-green-900 pt-20 pb-4 overflow-hidden relative font-sans">
       <div className="container mx-auto px-4 relative z-10 mb-2">
@@ -140,7 +162,7 @@ export default function Footer({
               </span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
-              {brandDesc}
+              {contactInfo?.subtitle}
             </p>
             <div className="flex gap-4">
               {socials.map((social, i) => (
@@ -166,7 +188,7 @@ export default function Footer({
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
-                    to={link.href}
+                    href={link.href}
                     className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
                   >
                     <ChevronRight className="h-4 w-4 text-green-600 group-hover:text-green-400 transition-colors" />
@@ -187,7 +209,7 @@ export default function Footer({
                 {productLinks.map((link) => (
                   <li key={link.name}>
                     <Link
-                      to={link.href}
+                      href={link.href}
                       className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
                     >
                       <ChevronRight className="h-4 w-4 text-green-600 group-hover:text-green-400 transition-colors" />
@@ -200,7 +222,7 @@ export default function Footer({
               <ul className="space-y-3">
                 <li key="all-products">
                   <Link
-                    to="/products"
+                    href="/products"
                     className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
                   >
                     <ChevronRight className="h-4 w-4 text-green-600 group-hover:text-green-400 transition-colors" />
@@ -221,19 +243,19 @@ export default function Footer({
                 {(contactDetails.length > 0
                   ? contactDetails
                   : [
-                      {
-                        icon: (
-                          <MapPin className="h-5 w-5 text-green-400 shrink-0" />
-                        ),
-                        text: "Loading address...",
-                      },
-                      {
-                        icon: (
-                          <Mail className="h-5 w-5 text-green-400 shrink-0" />
-                        ),
-                        text: "info@ayushicrop.com",
-                      },
-                    ]
+                    {
+                      icon: (
+                        <MapPin className="h-5 w-5 text-green-400 shrink-0" />
+                      ),
+                      text: "Loading address...",
+                    },
+                    {
+                      icon: (
+                        <Mail className="h-5 w-5 text-green-400 shrink-0" />
+                      ),
+                      text: "info@ayushicrop.com",
+                    },
+                  ]
                 ).map((info, i) => (
                   <li key={i} className="flex items-start gap-4 text-gray-400">
                     <div className="mt-1 p-2 rounded-lg bg-green-900/30 text-green-400">
@@ -285,7 +307,7 @@ export default function Footer({
               staticPageData?.map((page) => (
                 <Link
                   key={page.slug}
-                  to={`/static/${page.slug}`}
+                  href={`/static/${page.slug}`}
                   className="hover:text-green-400 transition-colors"
                 >
                   {page.title}

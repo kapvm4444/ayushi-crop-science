@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,13 +13,13 @@ export default function FloatingNavbar({
   navLinks = [],
   ctaText = "Get Quote",
   ctaLink,
-  onCtaClick = () => {},
+  onCtaClick = () => { },
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [mobileExpandedIndex, setMobileExpandedIndex] = useState(null);
-  const location = useLocation();
+  const pathname = usePathname();
 
   const { data: categories } = useCategories();
 
@@ -89,7 +92,7 @@ export default function FloatingNavbar({
           )}
         >
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group">
             <div className="transition-colors">
               <img
                 src={logo.src}
@@ -122,8 +125,8 @@ export default function FloatingNavbar({
                       "relative px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-full flex items-center gap-1 cursor-default",
                       (
                         link.href === "/"
-                          ? location.pathname === "/"
-                          : location.pathname.startsWith(link.href)
+                          ? pathname === "/"
+                          : pathname.startsWith(link.href)
                       )
                         ? "bg-primary text-white shadow-md"
                         : isScrolled
@@ -136,13 +139,13 @@ export default function FloatingNavbar({
                   </div>
                 ) : (
                   <Link
-                    to={link.href}
+                    href={link.href}
                     className={cn(
                       "relative px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-full flex items-center gap-1",
                       (
                         link.href === "/"
-                          ? location.pathname === "/"
-                          : location.pathname.startsWith(link.href)
+                          ? pathname === "/"
+                          : pathname.startsWith(link.href)
                       )
                         ? "bg-primary text-white shadow-md"
                         : isScrolled
@@ -175,7 +178,7 @@ export default function FloatingNavbar({
                         {link.dropdown.map((subItem) => (
                           <Link
                             key={subItem.name}
-                            to={subItem.href}
+                            href={subItem.href}
                             className={cn(
                               "block px-4 py-3 text-sm rounded-lg transition-colors font-medium",
                               isScrolled /*|| !isHomePage*/
@@ -197,7 +200,7 @@ export default function FloatingNavbar({
           {/* CTA & Mobile Toggle */}
           <div className="flex items-center gap-4">
             {ctaLink ? (
-              <Link to={ctaLink}>
+              <Link href={ctaLink}>
                 <Button size="sm" className="rounded-full px-6 hidden lg:flex">
                   {ctaText}
                 </Button>
@@ -260,14 +263,14 @@ export default function FloatingNavbar({
                       </div>
                     ) : (
                       <Link
-                        to={link.href}
+                        href={link.href}
                         onClick={() => setIsMobileMenuOpen(false)}
                         className={cn(
                           "text-2xl font-medium transition-colors hover:text-primary",
                           (
                             link.href === "/"
-                              ? location.pathname === "/"
-                              : location.pathname.startsWith(link.href)
+                              ? pathname === "/"
+                              : pathname.startsWith(link.href)
                           )
                             ? "text-primary"
                             : "text-muted-foreground",
@@ -307,7 +310,7 @@ export default function FloatingNavbar({
                         {link.dropdown.map((subItem) => (
                           <Link
                             key={subItem.name}
-                            to={subItem.href}
+                            href={subItem.href}
                             onClick={() => setIsMobileMenuOpen(false)}
                             className="py-3 text-lg text-muted-foreground hover:text-primary transition-colors"
                           >

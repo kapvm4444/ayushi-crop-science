@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
@@ -13,7 +13,7 @@ export function ProductCard({ product, index }) {
             style={{ willChange: "opacity, transform" }}
             className="group bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col h-full w-full"
         >
-            <Link to={`/products/${product.id}`} className="flex flex-col h-full">
+            <Link href={`/products/${product.id}`} className="flex flex-col h-full">
                 {/* Image Section */}
                 <div className="aspect-[4/3] overflow-hidden bg-muted relative shrink-0">
                     <img

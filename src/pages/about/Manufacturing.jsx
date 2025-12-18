@@ -1,3 +1,5 @@
+"use client";
+
 import AboutLayout from "./AboutLayout"
 import { motion } from "framer-motion"
 import { ClipboardCheck, Microscope, PackageCheck, Settings, Zap } from "lucide-react"

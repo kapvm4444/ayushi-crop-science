@@ -1,6 +1,8 @@
+"use client";
+
 import { useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import Layout from "@/layout/Layout";
+import { useParams, useRouter } from "next/navigation";
+// import Layout from "@/layout/Layout";
 import AuroraHero from "@/components/premium/AuroraHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function JobApply() {
   const { id: slug } = useParams();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { career: job, isLoading: isJobsLoading } = useCareer(slug);
   const { mutate, isPending } = useSubmitCareer();
   const fileInputRef = useRef(null);
@@ -52,7 +54,7 @@ export default function JobApply() {
 
     mutate(payload, {
       onSuccess: () => {
-        navigate("/careers");
+        router.push("/careers");
       },
     });
   };
@@ -65,7 +67,7 @@ export default function JobApply() {
 
   if (isJobsLoading) {
     return (
-      <Layout>
+      <>
         <AuroraHero
           title="Loading..."
           compact={true}
@@ -92,13 +94,13 @@ export default function JobApply() {
             </div>
           </div>
         </div>
-      </Layout>
+      </>
     );
   }
 
   if (!job) {
     return (
-      <Layout>
+      <>
         <AuroraHero
           title="Job Not Found"
           compact={true}
@@ -110,14 +112,14 @@ export default function JobApply() {
             The job position you are looking for might have been closed or does
             not exist.
           </p>
-          <Button onClick={() => navigate("/careers")}>Back to Careers</Button>
+          <Button onClick={() => router.push("/careers")}>Back to Careers</Button>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <AuroraHero
         title={`Apply for ${job.title}`}
         compact={true}
@@ -286,7 +288,7 @@ export default function JobApply() {
           </motion.div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }
 

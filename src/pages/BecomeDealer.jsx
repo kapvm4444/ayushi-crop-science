@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import Layout from "@/layout/Layout";
+// import Layout from "@/layout/Layout";
 import AuroraHero from "@/components/premium/AuroraHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -119,7 +121,7 @@ export default function BecomeDealer() {
         })) || [];
 
     return (
-        <Layout>
+        <>
             <AuroraHero
                 title="Become a Dealer"
                 compact={true}
@@ -442,6 +444,6 @@ export default function BecomeDealer() {
                     </motion.div>
                 </div>
             </div>
-        </Layout>
+        </>
     );
 }

@@ -1,6 +1,8 @@
+"use client";
+
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-import Layout from "@/layout/Layout";
+import Link from "next/link";
+// import Layout from "@/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import AuroraHero from "@/components/premium/AuroraHero";
@@ -45,7 +47,7 @@ export default function Products() {
   }
 
   return (
-    <Layout>
+    <>
       <AuroraHero
         title="Our Products"
         compact={true}
@@ -75,7 +77,7 @@ export default function Products() {
               {categories?.map((cat) => (
                 <Link
                   key={cat.id}
-                  to={`/products/category/${slugify(cat.name)}`}
+                  href={`/products/category/${slugify(cat.name)}`}
                 >
                   <Button variant="outline" className="rounded-full px-6">
                     {cat.name}
@@ -141,6 +143,6 @@ export default function Products() {
           </div>
         )}
       </div>
-    </Layout>
+    </>
   );
 }

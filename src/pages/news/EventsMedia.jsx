@@ -1,17 +1,31 @@
-import Layout from "@/layout/Layout";
+"use client";
+
+import { useState } from "react";
 import AuroraHero from "@/components/premium/AuroraHero";
 import { motion } from "framer-motion";
-import { Calendar, MapPin } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Calendar, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { useEvent } from "@/hooks/useEvent.js";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
+import { Button } from "@/components/ui/button";
 
 export default function EventsMedia() {
-  const { eventData: events, isLoading, error } = useEvent();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { eventData: eventsData, isLoading, error } = useEvent(null, currentPage);
+
+  const events = eventsData?.data || [];
+  const totalPages = eventsData?.last_page || 1;
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   if (isLoading) {
     return (
-      <Layout>
+      <>
         <AuroraHero
           title="Events & Media"
           compact={true}
@@ -41,13 +55,13 @@ export default function EventsMedia() {
             ))}
           </div>
         </div>
-      </Layout>
+      </>
     );
   }
 
   if (error) {
     return (
-      <Layout>
+      <>
         <AuroraHero
           title="Events & Media"
           compact={true}
@@ -59,12 +73,12 @@ export default function EventsMedia() {
           </h2>
           <p className="text-muted-foreground mt-2">Please try again later.</p>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <AuroraHero
         title="Events & Media"
         compact={true}
@@ -85,7 +99,7 @@ export default function EventsMedia() {
               style={{ willChange: "opacity, transform" }}
               className="bg-card border rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px]"
             >
-              <Link to={`/events-media/${item.slug}`}>
+              <Link href={`/events-media/${item.slug}`}>
                 <div className="h-48 overflow-hidden">
                   <img
                     src={item.image}
@@ -121,7 +135,30 @@ export default function EventsMedia() {
             </motion.div>
           ))}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-16">
+            <Button
+              variant="outline"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4 mr-2" /> Previous
+            </Button>
+            <span className="text-sm font-medium">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next <ChevronRight className="h-4 w-4 ml-2" />
+            </Button>
+          </div>
+        )}
       </div>
-    </Layout>
+    </>
   );
 }

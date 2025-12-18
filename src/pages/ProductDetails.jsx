@@ -1,5 +1,5 @@
-import { useParams, Link } from "react-router-dom";
-import Layout from "@/layout/Layout";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle } from "lucide-react";
@@ -7,213 +7,215 @@ import { useProductDetails } from "@/hooks/useProducts";
 import { Skeleton } from "@/components/ui/skeleton";
 import AuroraHero from "@/components/premium/AuroraHero";
 
-export default function ProductDetails() {
-  const { id } = useParams();
+/* ✅ Public placeholder (DO NOT import) */
+const PLACEHOLDER_IMAGE = "/placeholder.jpg";
 
-  // Fetch all products and find the matching one
-  // In a larger app, we'd want a specific endpoint for single product
-  const { data: product, isLoading } = useProductDetails(id);
+export default function ProductDetails({ slug }) {
+  const { data: rawProduct, isLoading } = useProductDetails(slug);
 
-  console.log(product); //product details objexpct
+  // Unwrap usage if the API response wrapper persists
+  const product = rawProduct?.result || rawProduct;
 
+  const [bgImage, setBgImage] = useState(PLACEHOLDER_IMAGE);
+
+  /* ✅ Preload image + fallback if broken or missing */
+  useEffect(() => {
+    if (!product) {
+      setBgImage(PLACEHOLDER_IMAGE);
+      return;
+    }
+
+    const src =
+      product.product_images?.[0]?.image_path ||
+      product.image;
+
+    if (!src) {
+      setBgImage(PLACEHOLDER_IMAGE);
+      return;
+    }
+
+    const img = new Image();
+    img.src = src;
+
+    img.onload = () => setBgImage(src);
+    img.onerror = () => setBgImage(PLACEHOLDER_IMAGE);
+  }, [product]);
+
+  /* =======================
+     LOADING STATE
+  ======================= */
   if (isLoading) {
     return (
-      <Layout>
-        {/* Hero Background */}
-        <div className="relative w-full h-[40vh] min-h-[300px] bg-gradient-to-br from-primary/20 via-secondary/30 to-primary/10 flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-          <div className="container px-4 mx-auto relative z-10 text-center">
-            <Skeleton className="h-12 w-64 mx-auto" />
-          </div>
-        </div>
-
-        <div className="container px-4 mx-auto py-24">
-          <div className="mb-8">
-            <Skeleton className="h-6 w-32" />
-          </div>
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-            <Skeleton className="aspect-square w-full rounded-3xl" />
-            <div className="space-y-8">
-              <Skeleton className="h-4 w-1/4" />
-              <Skeleton className="h-12 w-3/4" />
-              <Skeleton className="h-8 w-1/3" />
-              <Skeleton className="h-32 w-full" />
-              <div className="space-y-3">
-                <Skeleton className="h-6 w-1/2" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </Layout>
+      <div className="container px-4 mx-auto py-24">
+        <Skeleton className="aspect-square w-full rounded-3xl mb-8" />
+        <Skeleton className="h-8 w-1/2 mb-4" />
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-full mb-2" />
+      </div>
     );
   }
 
+  /* =======================
+     NOT FOUND STATE
+  ======================= */
   if (!product) {
     return (
-      <Layout>
-        {/* Hero Background */}
-        <div className="relative w-full h-[40vh] min-h-[300px] bg-gradient-to-br from-primary/20 via-secondary/30 to-primary/10 flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-          <div className="container px-4 mx-auto relative z-10 text-center">
-            <h1 className="text-4xl md:text-6xl font-bold">
-              Product Not Found
-            </h1>
-          </div>
-        </div>
+      <>
+        {/* Hero */}
+        <AuroraHero
+          title="Product Not Found"
+          subtitle=""
+          compact
+          backgroundImage="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop"
+        />
 
-        <div className="container py-32 text-center">
-          <h2 className="text-3xl font-bold mb-4">Product Not Found</h2>
-          <Button asChild>
-            <Link to="/products">Return to All Products</Link>
+        <div className="container px-4 mx-auto py-24 flex flex-col items-center justify-center text-center">
+          {/* Centered button */}
+          <Button asChild className="mt-4">
+            <Link href="/products">Return to Products</Link>
           </Button>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
-      {/* Hero Background using AuroraHero for consistent navbar visibility */}
+    <>
+      {/* Hero */}
       <AuroraHero
         title={product.name}
         subtitle={product.category_name || "Product"}
-        compact={true}
+        compact
         backgroundImage="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop"
       />
 
       <div className="container px-4 mx-auto py-24">
+        {/* Back */}
         <Link
-          to="/products"
+          href="/products"
           className="inline-flex items-center text-muted-foreground hover:text-primary mb-8 transition-colors"
         >
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Products
         </Link>
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-          {/* Product Image */}
+          {/* =======================
+             PRODUCT IMAGE
+          ======================= */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="relative aspect-square bg-secondary/20 rounded-3xl overflow-hidden border shadow-sm group"
-          >
-            <img
-              src={
-                product.product_images?.[0]?.image_path ||
-                product.image ||
-                "https://placehold.co/600x600?text=No+Image"
-              }
-              alt={product.name}
-              onError={(e) =>
-                (e.target.src = "https://placehold.co/600x600?text=No+Image")
-              }
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          </motion.div>
+            className="relative aspect-square rounded-3xl overflow-hidden border shadow-sm bg-secondary/20"
+            style={{
+              backgroundImage: `url(${bgImage})`,
+              backgroundSize: "contain",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
 
-          {/* Product Info */}
+          {/* =======================
+             PRODUCT INFO
+          ======================= */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="space-y-8"
           >
-            <div>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-wider">
-                  {product.category_name || "Product"}
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2">
+              <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase">
+                {product.category_name || "Product"}
+              </span>
+              {product.brand && (
+                <span className="px-3 py-1 bg-secondary rounded-full text-xs font-bold uppercase">
+                  {product.brand}
                 </span>
-                {product.brand && (
-                  <span className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-xs font-bold uppercase tracking-wider">
-                    {product.brand}
-                  </span>
-                )}
-              </div>
+              )}
+            </div>
 
-              <h1 className="text-3xl md:text-5xl font-bold mb-2 text-gradient">
+            {/* Title */}
+            <div>
+              <h1 className="text-3xl md:text-5xl font-bold mb-2">
                 {product.name}
               </h1>
               {product.techname && (
-                <h2 className="text-xl md:text-2xl font-medium text-muted-foreground mb-4">
+                <h2 className="text-xl text-muted-foreground">
                   {product.techname}
                 </h2>
               )}
             </div>
 
-            {/* Key Details Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 py-6 border-y border-border/50">
+            {/* Key Details */}
+            <div className="grid sm:grid-cols-2 gap-6 py-6 border-y">
               {product.targetapplication && (
                 <div>
-                  <h4 className="font-semibold text-sm text-primary uppercase mb-2">
-                    Target Crops
+                  <h4 className="font-semibold text-sm uppercase text-primary mb-1">
+                    Target Application
                   </h4>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-muted-foreground">
                     {product.targetapplication}
                   </p>
                 </div>
               )}
               {product.control && (
                 <div>
-                  <h4 className="font-semibold text-sm text-primary uppercase mb-2">
-                    Target Pests/Weeds
+                  <h4 className="font-semibold text-sm uppercase text-primary mb-1">
+                    Control
                   </h4>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-muted-foreground">
                     {product.control}
                   </p>
                 </div>
               )}
               {product.dosage && (
                 <div>
-                  <h4 className="font-semibold text-sm text-primary uppercase mb-2">
-                    Recommended Dosage
+                  <h4 className="font-semibold text-sm uppercase text-primary mb-1">
+                    Dosage
                   </h4>
-                  <p className="text-muted-foreground font-medium">
+                  <p className="text-muted-foreground">
                     {product.dosage}
                   </p>
                 </div>
               )}
               {product.packingsize && (
                 <div>
-                  <h4 className="font-semibold text-sm text-primary uppercase mb-2">
+                  <h4 className="font-semibold text-sm uppercase text-primary mb-1">
                     Packing Size
                   </h4>
-                  <p className="text-muted-foreground font-medium">
+                  <p className="text-muted-foreground">
                     {product.packingsize}
                   </p>
                 </div>
               )}
             </div>
 
+            {/* Features */}
             {product.features && (
-              <div className="space-y-4">
-                <h3 className="font-bold text-xl">Key Features</h3>
-                <div className="prose prose-sm text-muted-foreground">
-                  {product.features.split("\n").map((line, i) => (
-                    <div key={i} className="flex gap-3 items-start mb-2 group">
-                      <div className="mt-1 shrink-0 p-1 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                        <CheckCircle className="h-4 w-4" />
-                      </div>
-                      <span className="leading-relaxed">{line}</span>
-                    </div>
-                  ))}
-                </div>
+              <div>
+                <h3 className="font-bold text-xl mb-4">Key Features</h3>
+                {product.features.split("\n").map((line, i) => (
+                  <div key={i} className="flex gap-3 mb-2">
+                    <CheckCircle className="h-4 w-4 text-primary mt-1" />
+                    <span className="text-muted-foreground">
+                      {line}
+                    </span>
+                  </div>
+                ))}
               </div>
             )}
 
-            {/* Description fallback if features or details are sparse, or as intro */}
+            {/* Description */}
             {product.description && !product.features && (
-              <div className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-lg text-muted-foreground">
                 {product.description}
-              </div>
+              </p>
             )}
-
-            {/* No Enquire Button as requested */}
           </motion.div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

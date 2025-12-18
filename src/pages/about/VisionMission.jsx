@@ -1,3 +1,5 @@
+"use client";
+
 import AboutLayout from "./AboutLayout";
 import { Target, Globe, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";

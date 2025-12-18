@@ -1,6 +1,9 @@
-import { useParams, Link, useLocation } from "react-router-dom";
+"use client";
+
+import { useParams, usePathname } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import Layout from "@/layout/Layout";
+// import Layout from "@/layout/Layout";
 import AuroraHero from "@/components/premium/AuroraHero";
 import { Button } from "@/components/ui/button";
 import {
@@ -61,7 +64,7 @@ const PostDetailView = ({
     };
 
     return (
-        <Layout>
+        <>
             <AuroraHero
                 title={title}
                 compact={true}
@@ -71,7 +74,7 @@ const PostDetailView = ({
             <div className="container px-4 mx-auto py-12">
 
                 <Link
-                    to={backLink}
+                    href={backLink}
                     className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-8 transition-colors"
                 >
                     <ArrowLeft className="h-4 w-4" /> Back to {backLabel}
@@ -204,13 +207,13 @@ const PostDetailView = ({
                     </motion.div>
                 </div>
             </div>
-        </Layout>
+        </>
     );
 };
 
 // --- Loading Component ---
 const LoadingView = ({ backLink, backLabel, displayLabel }) => (
-    <Layout>
+    <>
         <AuroraHero
             title={displayLabel}
             compact={true}
@@ -237,19 +240,19 @@ const LoadingView = ({ backLink, backLabel, displayLabel }) => (
                 </div>
             </div>
         </div>
-    </Layout>
+    </>
 );
 
 // --- Error/Not Found Component ---
 const ErrorView = ({ backLink, backLabel }) => (
-    <Layout>
+    <>
         <div className="min-h-screen flex flex-col items-center justify-center gap-4">
             <h1 className="text-2xl font-bold">Post Not Found</h1>
-            <Link to={backLink}>
+            <Link href={backLink}>
                 <Button>Back to {backLabel}</Button>
             </Link>
         </div>
-    </Layout>
+    </>
 );
 
 // --- Wrappers ---
@@ -358,7 +361,7 @@ const EventPost = () => {
 
 // --- Main Router Component ---
 export default function PostDetail() {
-    const { pathname } = useLocation();
+    const pathname = usePathname();
 
     const isBlog = pathname.includes("/blogs");
     const isEvent = pathname.includes("/events-media");

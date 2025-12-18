@@ -12,3 +12,7 @@ export async function getContactInfo() {
 export async function submitContactForm(data) {
   return await getDataByEndpoint("frontend/contact/submit", data);
 }
+
+export async function getFaqs() {
+  return await getDataByEndpoint("frontend/faqs");
+}

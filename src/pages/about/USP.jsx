@@ -1,3 +1,5 @@
+"use client";
+
 import AboutLayout from "./AboutLayout";
 import {
   CheckCircle,

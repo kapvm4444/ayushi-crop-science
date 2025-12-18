@@ -1,3 +1,5 @@
+"use client";
+
 import AboutLayout from "./AboutLayout";
 import { motion } from "framer-motion";
 import { Leaf, Droplets, Sun, Recycle, Sprout } from "lucide-react";

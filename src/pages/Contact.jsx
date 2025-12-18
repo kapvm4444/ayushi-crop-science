@@ -1,15 +1,14 @@
+"use client";
+
 import { useState } from "react";
-import Layout from "@/layout/Layout";
 import AuroraHero from "@/components/premium/AuroraHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import toast from "react-hot-toast";
 import {
   MapPin,
   Phone,
   Mail,
-  Clock,
   Facebook,
   Twitter,
   Instagram,
@@ -18,30 +17,13 @@ import {
 import { motion } from "framer-motion";
 import { useContact } from "@/hooks/useContact.js";
 import { useSubmitContact } from "@/hooks/useSubmitContact.js";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import ContactMap from "@/components/ContactMap";
 
-const FAQ_DATA = [
-  {
-    q: "Do you offer bulk purchasing?",
-    a: "Yes, we offer special rates for bulk orders and dealerships. Please contact our sales team for more details.",
-  },
-  {
-    q: "Are your products organic?",
-    a: "We have a dedicated range of certified organic products suitable for sustainable farming.",
-  },
-  {
-    q: "Do you provide technical support?",
-    a: "Absolutely. Our team of agricultural experts is available to guide you on product usage and crop management.",
-  },
-  {
-    q: "Where can I find your products?",
-    a: "Our products are available across major agricultural dealers in India. You can also order directly through us.",
-  },
-];
-
 export default function Contact() {
   const { contactInfo, isLoading, error } = useContact();
+
   const submitContactMutation = useSubmitContact();
 
   const [formData, setFormData] = useState({
@@ -50,7 +32,6 @@ export default function Contact() {
     subject: "",
     message: "",
   });
-  const [faqs] = useState(FAQ_DATA);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -70,7 +51,7 @@ export default function Contact() {
   };
 
   return (
-    <Layout>
+    <>
       <AuroraHero
         title="Get in Touch"
         compact={true}
@@ -341,35 +322,8 @@ export default function Contact() {
           </motion.div>
         </div>
 
-        {/* FAQ Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-3xl mx-auto pt-12 border-t"
-        >
-          <div className="text-center mb-12">
-            <h2 className="section-title">Frequently Asked Questions</h2>
-          </div>
-          <div className="grid gap-6">
-            {faqs.map((faq, i) => (
-              <div
-                key={i}
-                className="bg-card border rounded-2xl p-6 hover:shadow-md transition-shadow"
-              >
-                <h3 className="font-bold text-lg mb-3 flex items-start gap-3">
-                  <span className="text-primary text-xl">Q.</span>
-                  {faq.q}
-                </h3>
-                <p className="text-muted-foreground pl-8 leading-relaxed">
-                  {faq.a}
-                </p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+
       </div>
-    </Layout>
+    </>
   );
 }

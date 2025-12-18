@@ -29,9 +29,9 @@ export function useProducts(categoryId = null) {
   });
 }
 
-export function useProductDetails(productId) {
+export function useProductDetails(slug) {
   return useQuery({
-    queryKey: ["products", productId],
-    queryFn: () => getProductById(productId),
+    queryKey: ["products", slug],
+    queryFn: () => getProductById(slug),
   });
 }

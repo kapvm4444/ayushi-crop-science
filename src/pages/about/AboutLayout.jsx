@@ -1,9 +1,9 @@
-import Layout from "@/layout/Layout"
+"use client";
 import AuroraHero from "@/components/premium/AuroraHero"
 
 export default function AboutLayout({ title, subtitle, image, children }) {
     return (
-        <Layout>
+        <>
             <AuroraHero
                 title={title}
                 compact={true}
@@ -14,6 +14,6 @@ export default function AboutLayout({ title, subtitle, image, children }) {
                     {children}
                 </div>
             </div>
-        </Layout>
+        </>
     )
 }

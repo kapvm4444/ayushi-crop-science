@@ -1,10 +1,12 @@
+"use client";
+
 import { useState } from "react";
-import Layout from "@/layout/Layout";
+// import Layout from "@/layout/Layout";
 import AuroraHero from "@/components/premium/AuroraHero";
 import { Timeline } from "@/components/premium/Timeline";
 import { motion } from "framer-motion";
 import { Award, Globe, Leaf, ArrowRight, Factory, Users, Target, ShieldCheck, Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const SECTIONS = [
   {
@@ -114,7 +116,7 @@ export default function About() {
   ];
 
   return (
-    <Layout>
+    <>
       <AuroraHero
         title="Our Roots, Our Legacy"
         compact={true}
@@ -131,7 +133,7 @@ export default function About() {
             <p className="text-muted-foreground max-w-2xl mx-auto">Discover the pillars that make Ayushi Crop Science a trusted name in agriculture.</p>
           </div>
           {SECTIONS.map((section, i) => (
-            <Link key={i} to={section.href} className="group relative overflow-hidden rounded-3xl h-80 shadow-lg hover:shadow-2xl transition-all duration-500 w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px]">
+            <Link key={i} href={section.href} className="group relative overflow-hidden rounded-3xl h-80 shadow-lg hover:shadow-2xl transition-all duration-500 w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px]">
               <div className="absolute inset-0">
                 <img src={section.image} alt={section.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500" />
@@ -181,6 +183,6 @@ export default function About() {
           </div>
         </motion.div>
       </div>
-    </Layout>
+    </>
   );
 }

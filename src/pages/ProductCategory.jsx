@@ -1,6 +1,9 @@
+"use client";
+
 import { useState, useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
-import Layout from "@/layout/Layout";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+// import Layout from "@/layout/Layout";
 import AuroraHero from "@/components/premium/AuroraHero";
 import { ArrowRight, Leaf, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -69,7 +72,7 @@ export default function ProductCategory() {
   // Loading State with Skeletons
   if (isCatsLoading || (currentCategory && isProductsLoading)) {
     return (
-      <Layout>
+      <>
         <AuroraHero
           title="Loading Products..."
           compact={true}
@@ -93,26 +96,26 @@ export default function ProductCategory() {
             ))}
           </div>
         </div>
-      </Layout>
+      </>
     );
   }
 
   // Not Found State
   if (!isCatsLoading && !currentCategory) {
     return (
-      <Layout>
+      <>
         <div className="container py-32 text-center">
           <h2 className="text-3xl font-bold mb-4">Category Not Found</h2>
           <Button asChild>
-            <Link to="/products">Return to All Products</Link>
+            <Link href="/products">Return to All Products</Link>
           </Button>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <AuroraHero
         title={title}
         compact={true}
@@ -155,11 +158,11 @@ export default function ProductCategory() {
               We are currently updating our {title} catalog. Check back soon!
             </p>
             <Button asChild className="mt-8">
-              <Link to="/products">View All Products</Link>
+              <Link href="/products">View All Products</Link>
             </Button>
           </div>
         )}
       </div>
-    </Layout>
+    </>
   );
 }

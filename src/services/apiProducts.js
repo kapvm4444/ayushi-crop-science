@@ -11,8 +11,8 @@ export async function getProducts(categoryId) {
   return await getDataByEndpoint("product/list", payload, "products");
 }
 
-export async function getProductById(productId) {
+export async function getProductById(slug) {
   return await getDataByEndpoint("frontend/productDetail", {
-    id: productId,
-  });
+    slug: slug,
+  }, "result");
 }

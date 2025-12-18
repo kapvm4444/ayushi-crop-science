@@ -1,4 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+"use client";
+
+import Link from "next/link";
+import { useState, useRef } from "react";
 import {
   ShieldCheck,
   Sprout,
@@ -6,8 +9,10 @@ import {
   CheckCircle,
   ChevronLeft,
   ChevronRight,
+  Calendar,
+  User,
+  ArrowRight
 } from "lucide-react";
-import Layout from "@/layout/Layout";
 import ModernHero from "@/components/premium/ModernHero";
 import BentoGrid from "@/components/premium/BentoGrid";
 import CountUp from "@/components/premium/CountUp";
@@ -16,7 +21,8 @@ import { motion } from "framer-motion";
 import LightRays from "@/components/premium/LightRays";
 import { useTestimonials } from "@/hooks/useTestimonials.js";
 import { useNews } from "@/hooks/useNews.js";
-import { useProducts } from "@/hooks/useProducts.js";
+import { useBlogs } from "@/hooks/useBlogs.js";
+import { useProducts } from "@/hooks/useProducts.js"; // Kept import if needed, though not used in new code explicitly for display? Ah, line 123 uses it.
 import { useStaticPages } from "@/hooks/useStaticPages.js";
 import { useWhoWeAre } from "@/hooks/useWhoWeAre.js";
 
@@ -46,7 +52,7 @@ const FEATURES_DATA = [
 
 const STATS_DATA = [
   { label: "Years Experience", value: 15, suffix: "+" },
-  { label: "Products", value: 50, suffix: "+" },
+  { label: "Products", value: 150, suffix: "+" },
   { label: "Happy Farmers", value: 10, suffix: "k+" },
   { label: "Acres Covered", value: 1, suffix: "M+" },
 ];
@@ -106,30 +112,6 @@ const PROCESS_DATA = [
   },
 ];
 
-const NEWS_DATA = [
-  {
-    title: "Launch of 'Super Yield' Growth Booster",
-    date: "Dec 01, 2023",
-    image:
-      "https://images.unsplash.com/photo-1595839088656-787c886c965e?q=80&w=2070&auto=format&fit=crop",
-    desc: "Introducing our revolutionary plant growth regulator that increases yield by up to 25%.",
-  },
-  {
-    title: "Ayushi Crop Science at Kisan Mela 2023",
-    date: "Nov 15, 2023",
-    image:
-      "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2074&auto=format&fit=crop",
-    desc: "We showcased our latest innovations to over 2000 farmers at the annual Kisan Mela.",
-  },
-  {
-    title: "Expansion into South Indian Markets",
-    date: "Oct 20, 2023",
-    image:
-      "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=2070&auto=format&fit=crop",
-    desc: "Extending our dealership network to serve farmers in Karnataka and Tamil Nadu.",
-  },
-];
-
 const ABOUT_POINTS_DATA = [
   "Innovative Research & Development",
   "Wide Range of Crop Solutions",
@@ -143,7 +125,7 @@ export default function Home() {
   const [stats, setStats] = useState(STATS_DATA);
 
   const { testimonials: fetchedTestimonials } = useTestimonials();
-  const { news: fetchedNews } = useNews();
+  const { blogData: fetchedBlogs } = useBlogs(null, 1); // Get first page of blogs
   const [process] = useState(PROCESS_DATA);
   const [aboutPoints, setAboutPoints] = useState(ABOUT_POINTS_DATA);
   const scrollContainerRef = useRef(null);
@@ -152,7 +134,9 @@ export default function Home() {
     fetchedTestimonials && fetchedTestimonials.length > 0
       ? fetchedTestimonials
       : TESTIMONIALS_DATA;
-  const news = fetchedNews && fetchedNews.length > 0 ? fetchedNews : NEWS_DATA;
+
+  // Check if fetchedBlogs has pagination structure or is array
+  const latestBlogs = fetchedBlogs?.data || fetchedBlogs || [];
 
   const scroll = (direction) => {
     if (scrollContainerRef.current) {
@@ -171,7 +155,7 @@ export default function Home() {
   };
 
   return (
-    <Layout>
+    <>
       {/* Premium Hero Section */}
       <div className="relative w-full h-full">
         <ModernHero />
@@ -289,8 +273,8 @@ export default function Home() {
                       src={testimonial.image}
                       alt={testimonial.name}
                       onError={(e) =>
-                        (e.target.src =
-                          "https://placehold.co/100x100?text=User")
+                      (e.target.src =
+                        "https://placehold.co/100x100?text=User")
                       }
                       className="w-full h-full object-cover"
                     />
@@ -350,7 +334,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Latest News Section */}
+      {/* Latest News (Blogs) Section */}
       <section className="py-24">
         <div className="container px-4 mx-auto">
           <div className="text-center mb-16">
@@ -365,36 +349,63 @@ export default function Home() {
             </motion.h2>
           </div>
           <div className="flex flex-wrap justify-center gap-8">
-            {news.slice(0, 3).map((news, i) => (
+            {latestBlogs.slice(0, 3).map((blog, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group cursor-pointer w-full md:w-[calc(33.33%-2rem)] min-w-[300px]"
+                className="group cursor-pointer w-full md:w-[calc(33.33%-2rem)] min-w-[300px] bg-card border rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300"
               >
-                <div className="rounded-2xl overflow-hidden mb-4 aspect-video">
-                  <img
-                    src={news.image}
-                    alt={news.title}
-                    onError={(e) =>
-                      (e.target.src = "https://placehold.co/600x400?text=News")
-                    }
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-                <div className="text-sm text-primary font-medium mb-2">
-                  {news.date}
-                </div>
-                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                  {news.title}
-                </h3>
-                <p className="text-muted-foreground line-clamp-3">
-                  {news.desc || news.short_description}
-                </p>
+                <Link href={`/blogs/${blog.slug}`} className="block h-full flex flex-col">
+                  {/* Image Container with explicit aspect ratio */}
+                  <div className="aspect-[16/9] w-full overflow-hidden relative bg-muted">
+                    <img
+                      src={blog.image}
+                      alt={blog.title}
+                      onError={(e) =>
+                        (e.target.src = "https://placehold.co/600x400?text=Blog")
+                      }
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
+                  </div>
+
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
+                      <span className="flex items-center gap-1 bg-secondary/50 px-2 py-1 rounded-full">
+                        <Calendar className="h-3 w-3" /> {blog.date}
+                      </span>
+                      {blog.author && (
+                        <span className="flex items-center gap-1">
+                          <User className="h-3 w-3" /> {blog.author}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                      {blog.title}
+                    </h3>
+
+                    <p className="text-muted-foreground text-sm line-clamp-3 mb-4 flex-grow">
+                      {blog.short_description || blog.desc}
+                    </p>
+
+                    <div className="mt-auto flex items-center text-primary text-sm font-semibold group-hover:translate-x-1 transition-transform">
+                      Read More <ArrowRight className="ml-1 h-4 w-4" />
+                    </div>
+                  </div>
+                </Link>
               </motion.div>
             ))}
+          </div>
+          <div className="text-center mt-12">
+            <Link href="/blogs">
+              <Button variant="outline" size="lg" className="rounded-full px-8">
+                View More
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -443,12 +454,14 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <Button size="lg" className="mt-4">
-              Learn More About Us
-            </Button>
+            <Link href="/about/who-we-are">
+              <Button size="lg" className="mt-4">
+                Learn More About Us
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </section>
-    </Layout>
+    </>
   );
 }

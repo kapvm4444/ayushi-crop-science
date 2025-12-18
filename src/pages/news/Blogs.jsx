@@ -1,17 +1,30 @@
-import Layout from "@/layout/Layout";
+"use client";
+
+import { useState } from "react";
 import AuroraHero from "@/components/premium/AuroraHero";
 import { motion } from "framer-motion";
-import { Calendar, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Calendar, User, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { useBlogs } from "@/hooks/useBlogs.js";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
+import { Button } from "@/components/ui/button";
 
 export default function Blogs() {
-  const { blogData: blogs, isLoading, error } = useBlogs();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { blogData, isLoading, error } = useBlogs(null, currentPage);
+  const blogs = blogData?.data || [];
+  const totalPages = blogData?.last_page || 1;
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   if (isLoading) {
     return (
-      <Layout>
+      <>
         <AuroraHero
           title="Blogs & Insights"
           compact={true}
@@ -41,13 +54,13 @@ export default function Blogs() {
             ))}
           </div>
         </div>
-      </Layout>
+      </>
     );
   }
 
   if (error) {
     return (
-      <Layout>
+      <>
         <AuroraHero
           title="Blogs & Insights"
           compact={true}
@@ -59,12 +72,12 @@ export default function Blogs() {
           </h2>
           <p className="text-muted-foreground mt-2">Please try again later.</p>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <AuroraHero
         title="Blogs & Insights"
         compact={true}
@@ -85,7 +98,7 @@ export default function Blogs() {
               style={{ willChange: "opacity, transform" }}
               className="bg-card border rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.33%-2rem)] min-w-[300px]"
             >
-              <Link to={`/blogs/${item.slug}`}>
+              <Link href={`/blogs/${item.slug}`}>
                 <div className="h-48 overflow-hidden">
                   <img
                     src={item.image}
@@ -118,7 +131,30 @@ export default function Blogs() {
             </motion.div>
           ))}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-16">
+            <Button
+              variant="outline"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4 mr-2" /> Previous
+            </Button>
+            <span className="text-sm font-medium">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next <ChevronRight className="h-4 w-4 ml-2" />
+            </Button>
+          </div>
+        )}
       </div>
-    </Layout>
+    </>
   );
 }

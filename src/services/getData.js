@@ -1,5 +1,5 @@
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const keyHash = import.meta.env.VITE_API_KEY_HASH.toString();
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.0.103/ayushiCrop_React/public/api";
+const keyHash = (process.env.NEXT_PUBLIC_API_KEY_HASH || "1234567890").toString();
 
 export async function getDataByEndpoint(
   endpoint,

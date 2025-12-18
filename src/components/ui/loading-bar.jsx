@@ -1,9 +1,11 @@
+"use client";
+
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 
 export default function TopLoadingBar() {
-    const location = useLocation()
+    const pathname = usePathname()
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
@@ -12,7 +14,7 @@ export default function TopLoadingBar() {
             setIsLoading(false)
         }, 800) // Simulate loading time
         return () => clearTimeout(timer)
-    }, [location])
+    }, [pathname])
 
     return (
         <AnimatePresence>
