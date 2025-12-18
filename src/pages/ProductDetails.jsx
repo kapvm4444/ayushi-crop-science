@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -25,9 +27,7 @@ export default function ProductDetails({ slug }) {
       return;
     }
 
-    const src =
-      product.product_images?.[0]?.image_path ||
-      product.image;
+    const src = product.product_images?.[0]?.image_path || product.image;
 
     if (!src) {
       setBgImage(PLACEHOLDER_IMAGE);
@@ -165,9 +165,7 @@ export default function ProductDetails({ slug }) {
                   <h4 className="font-semibold text-sm uppercase text-primary mb-1">
                     Control
                   </h4>
-                  <p className="text-muted-foreground">
-                    {product.control}
-                  </p>
+                  <p className="text-muted-foreground">{product.control}</p>
                 </div>
               )}
               {product.dosage && (
@@ -175,9 +173,7 @@ export default function ProductDetails({ slug }) {
                   <h4 className="font-semibold text-sm uppercase text-primary mb-1">
                     Dosage
                   </h4>
-                  <p className="text-muted-foreground">
-                    {product.dosage}
-                  </p>
+                  <p className="text-muted-foreground">{product.dosage}</p>
                 </div>
               )}
               {product.packingsize && (
@@ -185,9 +181,7 @@ export default function ProductDetails({ slug }) {
                   <h4 className="font-semibold text-sm uppercase text-primary mb-1">
                     Packing Size
                   </h4>
-                  <p className="text-muted-foreground">
-                    {product.packingsize}
-                  </p>
+                  <p className="text-muted-foreground">{product.packingsize}</p>
                 </div>
               )}
             </div>
@@ -199,9 +193,7 @@ export default function ProductDetails({ slug }) {
                 {product.features.split("\n").map((line, i) => (
                   <div key={i} className="flex gap-3 mb-2">
                     <CheckCircle className="h-4 w-4 text-primary mt-1" />
-                    <span className="text-muted-foreground">
-                      {line}
-                    </span>
+                    <span className="text-muted-foreground">{line}</span>
                   </div>
                 ))}
               </div>

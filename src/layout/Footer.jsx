@@ -143,8 +143,6 @@ export default function Footer({
     }
   }, [categories]);
 
-  console.log(contactInfo);
-
   return (
     <footer className="bg-[#052e16] text-white border-t border-green-900 pt-20 pb-4 overflow-hidden relative font-sans">
       <div className="container mx-auto px-4 relative z-10 mb-2">
@@ -243,19 +241,19 @@ export default function Footer({
                 {(contactDetails.length > 0
                   ? contactDetails
                   : [
-                    {
-                      icon: (
-                        <MapPin className="h-5 w-5 text-green-400 shrink-0" />
-                      ),
-                      text: "Loading address...",
-                    },
-                    {
-                      icon: (
-                        <Mail className="h-5 w-5 text-green-400 shrink-0" />
-                      ),
-                      text: "info@ayushicrop.com",
-                    },
-                  ]
+                      {
+                        icon: (
+                          <MapPin className="h-5 w-5 text-green-400 shrink-0" />
+                        ),
+                        text: "Loading address...",
+                      },
+                      {
+                        icon: (
+                          <Mail className="h-5 w-5 text-green-400 shrink-0" />
+                        ),
+                        text: "info@ayushicrop.com",
+                      },
+                    ]
                 ).map((info, i) => (
                   <li key={i} className="flex items-start gap-4 text-gray-400">
                     <div className="mt-1 p-2 rounded-lg bg-green-900/30 text-green-400">
