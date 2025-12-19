@@ -13,7 +13,7 @@ export default function FloatingNavbar({
   navLinks = [],
   ctaText = "Get Quote",
   ctaLink,
-  onCtaClick = () => { },
+  onCtaClick = () => {},
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -87,8 +87,8 @@ export default function FloatingNavbar({
             "flex items-center justify-between px-6 py-3 transition-all duration-500 ease-in-out",
             "backdrop-blur-md border shadow-xl rounded-full gap-5",
             isScrolled /*|| !isHomePage*/
-              ? "w-[85%] md:w-[70%] transition-all bg-white/5 dark:bg-black/5 border-green-500/60"
-              : "w-[95%] md:w-[90%] transition-all bg-transparent border-white/40 shadow-none",
+              ? "w-[95%] 2xl:w-[70%] transition-all bg-white/5 dark:bg-black/5 border-green-500/60"
+              : "w-[95%] 2xl:w-[90%] transition-all bg-transparent border-white/40 shadow-none",
           )}
         >
           {/* Logo */}

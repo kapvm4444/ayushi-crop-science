@@ -110,15 +110,18 @@ export default function Footer({
         }
       }
 
-      // Phone (Use branch contact as explicit fallback verified)
-      const mainBranchForPhone =
-        contactInfo.contactBranch?.find((b) => b.preferences === 1) ||
-        contactInfo.contactBranch?.[0];
+      //Contact Number
+      const contactNo = contactInfo.quick_contacts
+        ?.map(
+          (contact) =>
+            `<a href="tel:${contact.contactno}">${contact.contactno}</a>`,
+        )
+        .join("\n");
 
-      if (mainBranchForPhone && mainBranchForPhone.contactno) {
+      if (contactNo && contactNo.length > 0) {
         details.push({
           icon: <Phone className="h-5 w-5 text-green-400 shrink-0" />,
-          text: mainBranchForPhone.contactno,
+          text: contactNo,
         });
       }
 
@@ -126,7 +129,7 @@ export default function Footer({
       if (contactInfo.email) {
         details.push({
           icon: <Mail className="h-5 w-5 text-green-400 shrink-0" />,
-          text: contactInfo.email,
+          text: `<a href="mailto:${contactInfo.email}">${contactInfo.email}</a>`,
         });
       }
       setContactDetails(details);
@@ -241,47 +244,32 @@ export default function Footer({
                 {(contactDetails.length > 0
                   ? contactDetails
                   : [
-                      {
-                        icon: (
-                          <MapPin className="h-5 w-5 text-green-400 shrink-0" />
-                        ),
-                        text: "Loading address...",
-                      },
-                      {
-                        icon: (
-                          <Mail className="h-5 w-5 text-green-400 shrink-0" />
-                        ),
-                        text: "info@ayushicrop.com",
-                      },
-                    ]
+                    {
+                      icon: (
+                        <MapPin className="h-5 w-5 text-green-400 shrink-0" />
+                      ),
+                      text: "Loading address...",
+                    },
+                    {
+                      icon: (
+                        <Mail className="h-5 w-5 text-green-400 shrink-0" />
+                      ),
+                      text: "info@ayushicrop.com",
+                    },
+                  ]
                 ).map((info, i) => (
                   <li key={i} className="flex items-start gap-4 text-gray-400">
                     <div className="mt-1 p-2 rounded-lg bg-green-900/30 text-green-400">
                       {info.icon}
                     </div>
-                    <span className="text-sm leading-relaxed whitespace-pre-line">
-                      {info.text}
-                    </span>
+                    <span
+                      className="text-sm leading-relaxed whitespace-pre-line"
+                      dangerouslySetInnerHTML={{ __html: info.text }}
+                    ></span>
                   </li>
                 ))}
               </ul>
             </div>
-
-            {/*<div>
-              <h3 className="text-lg font-bold mb-4 text-green-400 font-heading">
-                Newsletter
-              </h3>
-              <div className="space-y-3">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex h-12 w-full rounded-lg border border-green-800 bg-green-950/50 px-4 py-2 text-sm placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:border-transparent transition-all"
-                />
-                <Button className="w-full h-12 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium shadow-md hover:shadow-lg transition-all">
-                  Subscribe Now
-                </Button>
-              </div>
-            </div>*/}
           </div>
         </div>
 

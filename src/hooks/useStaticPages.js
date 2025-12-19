@@ -8,7 +8,5 @@ export function useStaticPages() {
     error,
   } = useQuery({ queryKey: ["static-pages"], queryFn: getStaticPages });
 
-  console.log(staticPageData);
-
   return { staticPageData, isLoading, error };
 }

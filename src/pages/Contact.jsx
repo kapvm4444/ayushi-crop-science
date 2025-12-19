@@ -105,23 +105,27 @@ export default function Contact() {
               <div>
                 <h2 className="section-title mb-6">Contact Information</h2>
                 <p className="text-muted-foreground text-lg">
-                  We are here to help you with any questions or concerns. Find our
-                  branches below or send us a message.
+                  We are here to help you with any questions or concerns. Find
+                  our branches below or send us a message.
                 </p>
               </div>
 
               {/* General Contact */}
               {contactInfo && (
                 <div className="grid gap-6">
-                  <div className="flex items-start gap-4 p-6 bg-primary/5 rounded-2xl border border-primary/10">
-                    <div className="bg-primary/10 p-3 rounded-full shrink-0">
-                      <Mail className="h-6 w-6 text-primary" />
+                  <a href={`mailto:${contactInfo.email}`}>
+                    <div className="flex items-start gap-4 p-6 bg-primary/5 rounded-2xl border border-primary/10 hover:border-green-400 hover:bg-green-500/10">
+                      <div className="bg-primary/10 p-3 rounded-full shrink-0">
+                        <Mail className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-1">Email Us</h3>
+                        <p className="text-muted-foreground">
+                          {contactInfo.email}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">Email Us</h3>
-                      <p className="text-muted-foreground">{contactInfo.email}</p>
-                    </div>
-                  </div>
+                  </a>
 
                   {/* Social Links */}
                   <div className="flex gap-4">
@@ -193,12 +197,16 @@ export default function Contact() {
                           <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1">
                               <Phone className="h-3 w-3" />
-                              <span>{branch.contactno}</span>
+                              <a href={`tel:${branch.contactno}`}>
+                                {branch.contactno}
+                              </a>
                             </div>
                             {branch.contactno2 && (
                               <div className="flex items-center gap-1">
                                 <Phone className="h-3 w-3" />
-                                <span>{branch.contactno2}</span>
+                                <a href={`tel:${branch.contactno2}`}>
+                                  {branch.contactno2}
+                                </a>
                               </div>
                             )}
                           </div>
@@ -239,11 +247,23 @@ export default function Contact() {
             {isLoading ? (
               <div className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
-                  <div className="space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-10 w-full" /></div>
-                  <div className="space-y-2"><Skeleton className="h-4 w-24" /><Skeleton className="h-10 w-full" /></div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-10 w-full" />
+                  </div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-10 w-full" />
+                  </div>
                 </div>
-                <div className="space-y-2"><Skeleton className="h-4 w-16" /><Skeleton className="h-10 w-full" /></div>
-                <div className="space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-32 w-full" /></div>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-32 w-full" />
+                </div>
                 <Skeleton className="h-12 w-full rounded-full" />
               </div>
             ) : (
@@ -321,8 +341,6 @@ export default function Contact() {
             )}
           </motion.div>
         </div>
-
-
       </div>
     </>
   );

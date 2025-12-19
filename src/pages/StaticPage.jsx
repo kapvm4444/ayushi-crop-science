@@ -9,7 +9,8 @@ import { useStaticPages } from "@/hooks/useStaticPages.js";
 import NotFound from "@/pages/NotFound.jsx";
 
 export default function StaticPage() {
-  const { slug } = useParams();
+  const params = useParams();
+  const slug = params?.slug;
   const { staticPageData, isLoading, error } = useStaticPages();
   let pageData;
   if (!isLoading) pageData = staticPageData.find((page) => page.slug === slug);

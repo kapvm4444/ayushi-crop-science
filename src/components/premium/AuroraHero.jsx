@@ -13,7 +13,7 @@ export default function AuroraHero({
 }) {
   return (
     <div
-      className={`relative w-full flex items-center justify-center overflow-hidden ${compact ? 'h-[30vh] min-h-[250px]' : 'h-screen'}`}
+      className={`relative w-full flex items-center justify-center overflow-hidden ${compact ? "h-[40vh] min-h-[350px] pt-20" : "h-screen"}`}
     >
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
@@ -52,7 +52,7 @@ export default function AuroraHero({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className={`${compact ? 'text-4xl md:text-5xl' : 'text-5xl md:text-7xl'} font-bold text-white mb-6 tracking-tight`}
+          className={`${compact ? "text-4xl md:text-5xl" : "text-5xl md:text-7xl"} font-bold text-white mb-6 tracking-tight`}
         >
           {title}
         </motion.h1>
@@ -79,7 +79,6 @@ export default function AuroraHero({
             {subtitle}
           </motion.p>
         )}
-
 
         {/* CTA Buttons - Hidden in compact mode usually, unless specific need? User said "just title". I'll hide them for compact. */}
         {!compact && (ctaText || secondaryCtaText) && (

@@ -23,7 +23,8 @@ import { useSubmitCareer } from "@/hooks/useSubmitCareer";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function JobApply() {
-  const { id: slug } = useParams();
+  const params = useParams();
+  const slug = params?.id;
   const router = useRouter();
   const { career: job, isLoading: isJobsLoading } = useCareer(slug);
   const { mutate, isPending } = useSubmitCareer();

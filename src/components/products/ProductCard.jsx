@@ -2,10 +2,34 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import placeholder from "./../../../public/placeholder.jpg";
+import { useState, useEffect } from "react";
 
 export function ProductCard({ product, index }) {
+  const [bgImage, setBgImage] = useState(placeholder);
+
   const slug =
     product.name.toLowerCase().split(" ").join("-") + `-${product.id}`;
+
+  useEffect(() => {
+    if (!product) return;
+
+    const src =
+      product.image ||
+      product.product_images?.[0]?.image ||
+      product.product_images?.[0]?.image_path;
+
+    if (!src) {
+      setBgImage(null);
+      return;
+    }
+
+    const img = new Image();
+    img.src = src;
+    img.onload = () => setBgImage(src);
+    img.onerror = () => setBgImage(null);
+  }, [product]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -17,22 +41,18 @@ export function ProductCard({ product, index }) {
     >
       <Link href={`/products/${slug}`} className="flex flex-col h-full">
         {/* Image Section */}
-        <div className="aspect-[4/3] overflow-hidden bg-muted relative shrink-0">
-          <img
-            src={
-              product.image ||
-              product.product_images?.[0]?.image ||
-              product.product_images?.[0]?.image_path ||
-              "/placeholder.jpg"
-            }
-            alt={product.name}
-            onError={(e) => (e.target.src = "/placeholder.jpg")}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div
+          className="aspect-[4/3] overflow-hidden bg-white/75 relative shrink-0 transition-transform duration-500 group-hover:scale-105"
+          style={{
+            backgroundImage: `url(${bgImage || "/placeholder.jpg"})`,
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           {product.brand && (
-            <div className="absolute top-4 right-4 bg-gray-100 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary uppercase tracking-wider">
+            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary uppercase tracking-wider shadow-sm">
               {product.brand}
             </div>
           )}

@@ -12,7 +12,8 @@ import { useProducts, useCategories } from "@/hooks/useProducts";
 import { ProductCardGroup } from "@/components/products/ProductCardGroup";
 
 export default function ProductCategory() {
-  const { categoryId: categorySlug } = useParams();
+  const params = useParams();
+  const categorySlug = params?.categoryId;
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
 

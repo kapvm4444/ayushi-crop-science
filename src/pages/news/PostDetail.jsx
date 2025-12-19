@@ -258,7 +258,8 @@ const ErrorView = ({ backLink, backLabel }) => (
 // --- Wrappers ---
 
 const BlogPost = () => {
-    const { slug } = useParams();
+    const params = useParams();
+    const slug = params?.slug;
     const { blogData, isLoading, error } = useBlogs(slug);
 
     // The API might return an array with one item or the object directly. Handle both.
@@ -294,7 +295,8 @@ const BlogPost = () => {
 };
 
 const NewsPost = () => {
-    const { slug } = useParams();
+    const params = useParams();
+    const slug = params?.slug;
     const { news, isLoading, error } = useNews(slug);
 
     const data = Array.isArray(news) && news.length > 0 ? news[0] : news || null;
@@ -325,7 +327,8 @@ const NewsPost = () => {
 };
 
 const EventPost = () => {
-    const { slug } = useParams();
+    const params = useParams();
+    const slug = params?.slug;
     const { eventData, isLoading, error } = useEvent(slug);
 
     const data =
