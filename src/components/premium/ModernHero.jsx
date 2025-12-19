@@ -99,7 +99,11 @@ export default function ModernHero() {
         className="relative z-10 text-3xl md:text-6xl md:leading-tight max-w-5xl mx-auto text-center tracking-tight font-medium text-white flex flex-wrap justify-center gap-2 items-center px-4"
       >
         <motion.span layout>Cultivating an</motion.span>
-        <FlipWords words={words} className="text-green-500 font-bold" />
+        <FlipWords
+          words={words}
+          className="text-green-500 font-bold"
+          duration={5000}
+        />
         <motion.span layout>Future</motion.span>
       </motion.div>
 
