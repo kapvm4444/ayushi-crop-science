@@ -21,7 +21,7 @@ export const metadata = {
     title: "Ayushi Crop Science",
     description: "Empowering farmers with advanced crop protection solutions.",
     icons: {
-        icon: "/favicon.ico",
+        icon: "/logo@2x.png", // Replace with your actual favicon path
     },
 };
 
